@@ -56,7 +56,8 @@ exports['l-redm-ui']:OpenConversation({
     name = 'Foreman Dawson',
     text = 'Looking for honest work?',
     choices = {
-        { id = 'accept', label = 'Sign me up.' },
+        { id = 'accept', label = 'Sign me up.',
+            onSelect = function(choice) print('hired') end },
         { id = 'pay', label = 'How much does it pay?' },
         { id = 'leave', label = 'Not interested.' }
     },
@@ -68,7 +69,7 @@ exports['l-redm-ui']:CloseConversation()
 exports['l-redm-ui']:IsConversationOpen()
 ```
 
-Like the menus, conversations do not grab input, the player keeps control.
+Like the menus, every choice can carry its own `onSelect`; the conversation level `onSelect` is the fallback for choices without one. Conversations do not grab input, the player keeps control.
 
 ## Radial Menu
 

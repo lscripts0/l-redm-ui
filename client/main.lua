@@ -724,11 +724,18 @@ local function openConversation(data)
         onClose = data.onClose
     }
     currentConversation = conversation
+    local nuiChoices = {}
+    for _, choice in ipairs(data.choices) do
+        nuiChoices[#nuiChoices + 1] = {
+            id = choice.id,
+            label = choice.label
+        }
+    end
     SendNUIMessage({
         action = 'conversation:open',
         name = data.name,
         text = data.text,
-        choices = data.choices
+        choices = nuiChoices
     })
     startConversationThread(conversation)
     if not replacing then
@@ -751,7 +758,10 @@ RegisterNUICallback('conversation:select', function(data, cb)
             break
         end
     end
-    if choice and conversation.onSelect then
+    if not choice then return end
+    if choice.onSelect then
+        pcall(choice.onSelect, choice)
+    elseif conversation.onSelect then
         pcall(conversation.onSelect, choice)
     end
 end)
