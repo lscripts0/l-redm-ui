@@ -12,7 +12,7 @@ Built in texts are localized through `locales/` (`en` and `de` ship with the res
 
 ## Performance
 
-Measured with resmon on a Ryzen 7 5700X: 0.01 ms idle (0.00 ms with the chat disabled via `Config.Chat`), 0.03 to 0.05 ms while ui elements are on screen.
+Measured with resmon on a Ryzen 7 5700X: 0.01 ms idle (0.00 ms with the chat disabled via `Config.Chat`), 0.03 to 0.05 ms while a menu is open and its keys are being polled. Elements without key input (notifications, progress, text ui) stay at idle cost.
 
 ## Theming
 
