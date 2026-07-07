@@ -18,6 +18,8 @@ interface ChatMode {
 
 export default function Chat() {
   const [inputOpen, setInputOpen] = useState(false)
+  const [shown, setShown] = useState(false)
+  const [closing, setClosing] = useState(false)
   const [inputText, setInputText] = useState('')
   const [suggestions, setSuggestions] = useState<Record<string, ChatSuggestion>>({})
   const [modes, setModes] = useState<ChatMode[]>([])
@@ -72,6 +74,8 @@ export default function Chat() {
 
   useEffect(() => {
     if (!inputOpen) return
+    setShown(false)
+    const raf = requestAnimationFrame(() => setShown(true))
     let tries = 0
     const interval = window.setInterval(() => {
       tries++
@@ -88,6 +92,7 @@ export default function Chat() {
     document.addEventListener('visibilitychange', refocus)
     document.addEventListener('mousedown', refocus)
     return () => {
+      cancelAnimationFrame(raf)
       window.clearInterval(interval)
       window.removeEventListener('focus', refocus)
       document.removeEventListener('visibilitychange', refocus)
@@ -101,6 +106,8 @@ export default function Chat() {
     setInputOpen(false)
     setInputText('')
     historyPos.current = -1
+    setClosing(true)
+    window.setTimeout(() => setClosing(false), 250)
     fetchNui('chatResult', canceled ? { canceled: true } : { message, mode: currentMode?.name })
   }
 
@@ -156,7 +163,7 @@ export default function Chat() {
     }
   }
 
-  if (!inputOpen) return null
+  if (!inputOpen && !closing) return null
 
   return (
     <Box
@@ -165,7 +172,10 @@ export default function Chat() {
         left: '1rem',
         top: '1rem',
         width: '19.5rem',
-        pointerEvents: 'auto'
+        pointerEvents: 'auto',
+        transform: inputOpen && shown ? 'none' : 'translateY(-1rem)',
+        opacity: inputOpen && shown ? 1 : 0,
+        transition: 'transform 250ms ease-out, opacity 250ms ease-out'
       }}
     >
       <Box
