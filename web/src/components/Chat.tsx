@@ -177,7 +177,7 @@ export default function Chat() {
           px: '0.55rem',
           py: '0.18rem',
           background: colors.panel,
-          border: `var(--hairline) solid ${colors.panelEdge}`,
+          border: `var(--hairline) dashed ${colors.panelEdge}`,
           borderRadius: '0.15rem',
           boxShadow: colors.innerGlow
         }}
@@ -226,7 +226,7 @@ export default function Chat() {
             px: '0.55rem',
             py: '0.3rem',
             background: colors.panel,
-            border: `var(--hairline) solid ${colors.panelEdge}`,
+            border: `var(--hairline) dashed ${colors.panelEdge}`,
             borderRadius: '0.15rem',
             boxShadow: colors.innerGlow
           }}

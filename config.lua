@@ -33,6 +33,10 @@ Config.HoldTextUIDuration = 1000
 -- in milliseconds (default, can be overridden per call).
 Config.KeyConfirmDuration = 10000
 
+-- Where the objectives tracker is placed, same options as Config.TextUIPosition
+-- (default, can be overridden per call).
+Config.ObjectivesPosition = 'right-center'
+
 -- Segmented progress bar.
 Config.Progress = {
     -- Number of segments the bar is split into.

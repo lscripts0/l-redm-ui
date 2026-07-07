@@ -4,6 +4,7 @@ import { useNuiEvent } from './lib/nui'
 import type {
   AnnounceData,
   ConversationData,
+  CountdownData,
   DialogData,
   KeyConfirmData,
   KeyLegendData,
@@ -11,6 +12,7 @@ import type {
   HoldTextUIData,
   MenuData,
   NotifyData,
+  ObjectivesData,
   PinPadData,
   ProgressData,
   RadialData,
@@ -33,6 +35,8 @@ import Minigame from './components/Minigame'
 import Conversation from './components/Conversation'
 import PinPad from './components/PinPad'
 import Radial from './components/Radial'
+import Countdown from './components/Countdown'
+import Objectives from './components/Objectives'
 
 interface MenuState {
   menu: MenuData
@@ -69,12 +73,18 @@ export default function App() {
   const [conversation, setConversation] = useState<{ data: ConversationData; nonce: number } | null>(null)
   const [pinPad, setPinPad] = useState<{ data: PinPadData; nonce: number } | null>(null)
   const [radial, setRadial] = useState<{ data: RadialData; nonce: number } | null>(null)
+  const [countdown, setCountdown] = useState<{ data: CountdownData; nonce: number } | null>(null)
+  const [countdownHiding, setCountdownHiding] = useState(false)
+  const [objectives, setObjectives] = useState<ObjectivesData | null>(null)
+  const [objectivesHiding, setObjectivesHiding] = useState(false)
   const toastId = useRef(0)
   const warnHideTimer = useRef<number | null>(null)
   const keyConfirmHideTimer = useRef<number | null>(null)
   const textUIHideTimer = useRef<number | null>(null)
   const holdTextUIHideTimer = useRef<number | null>(null)
   const keyLegendHideTimer = useRef<number | null>(null)
+  const objectivesHideTimer = useRef<number | null>(null)
+  const countdownHideTimer = useRef<number | null>(null)
 
   const hideWarn = () => {
     if (warnHideTimer.current !== null) return
@@ -223,7 +233,7 @@ export default function App() {
   useNuiEvent('conversation:close', () => setConversation(null))
   useNuiEvent<PinPadData>('pinpad:open', (data) =>
     setPinPad((prev) => ({
-      data: { title: data.title, length: data.length },
+      data: { title: data.title, length: data.length, submitLabel: data.submitLabel, cancelLabel: data.cancelLabel },
       nonce: (prev?.nonce ?? 0) + 1
     }))
   )
@@ -235,6 +245,46 @@ export default function App() {
     }))
   )
   useNuiEvent('radial:close', () => setRadial(null))
+  useNuiEvent<CountdownData>('countdown:tick', (data) => {
+    if (countdownHideTimer.current !== null) {
+      window.clearTimeout(countdownHideTimer.current)
+      countdownHideTimer.current = null
+    }
+    setCountdownHiding(false)
+    setCountdown((prev) => ({
+      data: { value: data.value, text: data.text },
+      nonce: prev?.nonce ?? 1
+    }))
+  })
+  useNuiEvent('countdown:hide', () => {
+    if (countdownHideTimer.current !== null) return
+    setCountdownHiding(true)
+    countdownHideTimer.current = window.setTimeout(() => {
+      countdownHideTimer.current = null
+      setCountdown(null)
+      setCountdownHiding(false)
+    }, 300)
+  })
+  useNuiEvent<ObjectivesData>('objectives:show', (data) => {
+    if (objectivesHideTimer.current !== null) {
+      window.clearTimeout(objectivesHideTimer.current)
+      objectivesHideTimer.current = null
+    }
+    setObjectivesHiding(false)
+    setObjectives({ title: data.title, entries: data.entries, position: data.position })
+  })
+  useNuiEvent<{ entries: ObjectivesData['entries'] }>('objectives:update', (data) =>
+    setObjectives((prev) => (prev ? { ...prev, entries: data.entries } : prev))
+  )
+  useNuiEvent('objectives:hide', () => {
+    if (objectivesHideTimer.current !== null) return
+    setObjectivesHiding(true)
+    objectivesHideTimer.current = window.setTimeout(() => {
+      objectivesHideTimer.current = null
+      setObjectives(null)
+      setObjectivesHiding(false)
+    }, 300)
+  })
   useNuiEvent<KeyLegendData>('keylegend:show', (data) => {
     if (keyLegendHideTimer.current !== null) {
       window.clearTimeout(keyLegendHideTimer.current)
@@ -288,6 +338,8 @@ export default function App() {
       {conversation && <Conversation key={conversation.nonce} data={conversation.data} />}
       {pinPad && <PinPad key={pinPad.nonce} data={pinPad.data} onDone={() => setPinPad(null)} />}
       {radial && <Radial key={radial.nonce} data={radial.data} />}
+      {countdown && <Countdown key={countdown.nonce} data={countdown.data} hiding={countdownHiding} />}
+      {objectives && <Objectives data={objectives} hiding={objectivesHiding} />}
     </Box>
   )
 }

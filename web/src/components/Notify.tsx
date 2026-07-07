@@ -66,7 +66,7 @@ function Toast({ toast, onDone, slide }: { toast: ToastItem; onDone: (id: number
         width: '15rem',
         overflow: 'hidden',
         background: colors.panel,
-        border: `var(--hairline) solid ${colors.panelEdge}`,
+        border: `var(--hairline) dashed ${colors.panelEdge}`,
         borderRadius: '0.15rem',
         boxShadow: colors.innerGlow,
         opacity: shown ? 1 : 0,

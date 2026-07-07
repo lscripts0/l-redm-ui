@@ -1,6 +1,6 @@
 # l-redm-ui
 
-UI kit for RedM, styled to fit RDR2: arrow key menus, npc conversations, radial menu, text ui, hold text ui, notifications, announce banner, fullscreen warn, alert/input/form dialogs, pin pad, key confirmations, progress bar and circle, skillcheck minigames, a grouped key legend and a full chat replacement. Built with React, TypeScript and MUI.
+UI kit for RedM, styled to fit RDR2: arrow key menus, npc conversations, radial menu, text ui, hold text ui, notifications, announce banner, fullscreen warn, alert/input/form dialogs, pin pad, key confirmations, progress bar and circle, skillcheck minigames, countdown, objectives tracker, a grouped key legend and a full chat replacement. Built with React, TypeScript and MUI.
 
 ## Install
 
@@ -211,7 +211,7 @@ exports['l-redm-ui']:IsDialogOpen()
 
 ## Pin Pad
 
-A digit pad for safes, door codes and similar. The code submits itself once all digits are entered; escape or `ClosePinPad()` cancels. Works with the mouse and the number keys. Same two call styles as the dialogs.
+A combination lock for safes, door codes and similar: the digits sit in a row and each one is turned up or down with the arrows above and below it, like the dials on a safe. Every digit starts at 0. Works with the mouse and the keyboard (arrow keys turn and move, number keys set a digit directly, enter confirms, escape cancels). Same two call styles as the dialogs.
 
 ```lua
 exports['l-redm-ui']:PinPad({
@@ -314,6 +314,38 @@ exports['l-redm-ui']:ShowKeyLegend({
 
 exports['l-redm-ui']:HideKeyLegend()
 exports['l-redm-ui']:IsKeyLegendOpen()
+```
+
+## Countdown
+
+A countdown in mm:ss at the top center of the screen, for races, duels and events. It slides in, counts down, shows the end word for a moment and slides out again. Fire and forget, no callbacks and no sounds: your script decides when things start, the countdown is just the visual.
+
+```lua
+exports['l-redm-ui']:Countdown(3)              -- seconds, capped at 59:59
+exports['l-redm-ui']:Countdown(3, 'FIGHT')     -- optional text shown at the end instead of GO
+
+exports['l-redm-ui']:CancelCountdown()
+exports['l-redm-ui']:IsCountdownActive()
+```
+
+## Objectives
+
+A small task tracker panel for jobs and heists: a title, a list of objectives with diamond checkboxes, ticked off one by one from your script.
+
+```lua
+exports['l-redm-ui']:ShowObjectives({
+    title = 'Stagecoach Robbery',
+    position = 'right-center',        -- optional, defaults to Config.ObjectivesPosition
+    entries = {
+        { id = 'steal', label = 'Steal the stagecoach' },
+        { id = 'lose', label = 'Lose the law' },
+        { id = 'fence', label = 'Deliver it to the fence', done = false }
+    }
+})
+
+exports['l-redm-ui']:SetObjective('steal', true)   -- tick or untick a single entry
+exports['l-redm-ui']:HideObjectives()
+exports['l-redm-ui']:IsObjectivesOpen()
 ```
 
 ## Progress

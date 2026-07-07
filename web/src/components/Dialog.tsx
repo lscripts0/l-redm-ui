@@ -334,7 +334,7 @@ export default function Dialog({ data, onDone }: DialogProps) {
           px: '1.1rem',
           py: '0.8rem',
           background: `linear-gradient(180deg, rgba(16, 16, 16, 0.55), rgba(0, 0, 0, 0.25)), ${colors.panel}`,
-          border: `var(--hairline) solid ${colors.panelEdge}`,
+          border: `var(--hairline) dashed ${colors.panelEdge}`,
           borderRadius: '0.15rem',
           boxShadow: `${colors.innerGlow}, 0 0.4rem 2.2rem rgba(0, 0, 0, 0.55)`
         }}

@@ -32,7 +32,7 @@ export default function TextUI({ data, hiding }: TextUIProps) {
         px: '0.65rem',
         py: '0.35rem',
         background: colors.panel,
-        border: `var(--hairline) solid ${colors.panelEdge}`,
+        border: `var(--hairline) dashed ${colors.panelEdge}`,
         borderRadius: '0.15rem',
         boxShadow: colors.innerGlow,
         transform: visible ? variant.rest : variant.hidden,

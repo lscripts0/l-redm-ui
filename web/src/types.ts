@@ -130,6 +130,8 @@ export interface ConversationData {
 export interface PinPadData {
   title?: string
   length?: number
+  submitLabel?: string
+  cancelLabel?: string
 }
 
 export interface RadialItem {
@@ -140,6 +142,23 @@ export interface RadialItem {
 
 export interface RadialData {
   items: RadialItem[]
+}
+
+export interface CountdownData {
+  value: number
+  text?: string
+}
+
+export interface ObjectiveEntry {
+  id: string
+  label: string
+  done?: boolean
+}
+
+export interface ObjectivesData {
+  title?: string
+  entries: ObjectiveEntry[]
+  position?: TextUIPosition
 }
 
 export interface KeyLegendEntry {

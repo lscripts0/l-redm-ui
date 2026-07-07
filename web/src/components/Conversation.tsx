@@ -11,6 +11,8 @@ interface ConversationProps {
   data: ConversationData
 }
 
+const ROW_HEIGHT = 1.5
+
 export default function Conversation({ data }: ConversationProps) {
   const [selected, setSelected] = useState(0)
   const selectedRef = useRef(0)
@@ -43,11 +45,11 @@ export default function Conversation({ data }: ConversationProps) {
         left: '50%',
         bottom: '5.5rem',
         transform: 'translateX(-50%)',
-        width: '24rem',
-        px: '1.1rem',
-        py: '0.8rem',
+        width: '32rem',
+        px: '1.3rem',
+        py: '0.55rem',
         background: `linear-gradient(180deg, rgba(16, 16, 16, 0.55), rgba(0, 0, 0, 0.25)), ${colors.panel}`,
-        border: `var(--hairline) solid ${colors.panelEdge}`,
+        border: `var(--hairline) dashed ${colors.panelEdge}`,
         borderRadius: '0.15rem',
         boxShadow: `${colors.innerGlow}, 0 0.4rem 2.2rem rgba(0, 0, 0, 0.55)`
       }}
@@ -77,33 +79,49 @@ export default function Conversation({ data }: ConversationProps) {
           fontSize: '0.82rem',
           color: colors.text,
           textAlign: 'center',
-          lineHeight: 1.45,
-          mb: '0.6rem'
+          lineHeight: 1.4,
+          mb: '0.4rem'
         }}
       >
         {data.text}
       </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+      <Box sx={{ position: 'relative' }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: `${selected * ROW_HEIGHT}rem`,
+            left: 0,
+            right: 0,
+            height: `${ROW_HEIGHT}rem`,
+            border: 'var(--hairline) solid rgba(255, 255, 255, 0.75)',
+            borderRadius: '0.1rem',
+            boxShadow: colors.innerGlow,
+            backgroundColor: 'rgba(255, 255, 255, 0.04)',
+            transition: 'top 130ms ease-out',
+            pointerEvents: 'none'
+          }}
+        />
         {data.choices.map((choice, index) => {
           const active = index === selected
           return (
             <Box
               key={choice.id}
               sx={{
-                px: '0.55rem',
-                py: '0.26rem',
-                borderRadius: '0.1rem',
-                border: `var(--hairline) solid ${active ? 'rgba(255, 255, 255, 0.75)' : 'transparent'}`,
-                boxShadow: active ? colors.innerGlow : 'none',
-                backgroundColor: active ? 'rgba(255, 255, 255, 0.04)' : 'transparent'
+                height: `${ROW_HEIGHT}rem`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                px: '0.55rem'
               }}
             >
               <Typography
+                noWrap
                 sx={{
                   fontFamily: fonts.body,
                   fontSize: '0.8rem',
                   textAlign: 'center',
                   color: active ? colors.text : colors.textDim,
+                  transition: 'color 130ms ease-out',
                   lineHeight: 1.3
                 }}
               >

@@ -769,7 +769,9 @@ local function openPinPad(data)
     SendNUIMessage({
         action = 'pinpad:open',
         title = data.title,
-        length = data.length or 4
+        length = data.length or 4,
+        submitLabel = data.submitLabel or L('confirm'),
+        cancelLabel = data.cancelLabel or L('cancel')
     })
     SetNuiFocus(true, true)
     playSound('open')
@@ -860,6 +862,80 @@ RegisterNUICallback('radial:nav', function(_, cb)
     cb('ok')
     playSound('nav')
 end)
+
+local countdownToken = 0
+local countdownActive = false
+
+local function startCountdown(seconds, endText)
+    seconds = math.floor(tonumber(seconds) or 3)
+    if seconds < 1 then seconds = 1 end
+    if seconds > 3599 then seconds = 3599 end
+    countdownToken = countdownToken + 1
+    local token = countdownToken
+    countdownActive = true
+    CreateThread(function()
+        local remaining = seconds
+        while remaining > 0 and countdownToken == token do
+            SendNUIMessage({ action = 'countdown:tick', value = remaining })
+            Wait(1000)
+            remaining = remaining - 1
+        end
+        if countdownToken ~= token then return end
+        SendNUIMessage({ action = 'countdown:tick', value = 0, text = endText or L('countdown_go') })
+        Wait(2500)
+        if countdownToken == token then
+            countdownActive = false
+            SendNUIMessage({ action = 'countdown:hide' })
+        end
+    end)
+    return true
+end
+
+local function cancelCountdown()
+    if not countdownActive then return end
+    countdownActive = false
+    countdownToken = countdownToken + 1
+    SendNUIMessage({ action = 'countdown:hide' })
+end
+
+local currentObjectives = nil
+
+local function showObjectives(data)
+    if type(data) ~= 'table' or type(data.entries) ~= 'table' or #data.entries == 0 then return false end
+    currentObjectives = {
+        title = data.title,
+        entries = data.entries,
+        position = data.position or Config.ObjectivesPosition
+    }
+    SendNUIMessage({
+        action = 'objectives:show',
+        title = currentObjectives.title,
+        entries = currentObjectives.entries,
+        position = currentObjectives.position
+    })
+    return true
+end
+
+local function setObjective(id, done)
+    if not currentObjectives then return false end
+    for _, entry in ipairs(currentObjectives.entries) do
+        if entry.id == id then
+            entry.done = done == true
+            SendNUIMessage({ action = 'objectives:update', entries = currentObjectives.entries })
+            if entry.done then
+                playSound('select')
+            end
+            return true
+        end
+    end
+    return false
+end
+
+local function hideObjectives()
+    if not currentObjectives then return end
+    currentObjectives = nil
+    SendNUIMessage({ action = 'objectives:hide' })
+end
 
 local warnActive = false
 
@@ -968,6 +1044,13 @@ exports('IsMinigameActive', function() return currentMinigame ~= nil end)
 exports('ShowKeyLegend', showKeyLegend)
 exports('HideKeyLegend', hideKeyLegend)
 exports('IsKeyLegendOpen', function() return keyLegendOpen end)
+exports('Countdown', startCountdown)
+exports('CancelCountdown', cancelCountdown)
+exports('IsCountdownActive', function() return countdownActive end)
+exports('ShowObjectives', showObjectives)
+exports('SetObjective', setObjective)
+exports('HideObjectives', hideObjectives)
+exports('IsObjectivesOpen', function() return currentObjectives ~= nil end)
 exports('Progress', startProgress)
 exports('CancelProgress', cancelProgress)
 exports('IsProgressActive', function() return progressActive end)
