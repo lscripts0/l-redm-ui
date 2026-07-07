@@ -87,6 +87,26 @@ local function openMenu(menu)
     end
     local replacing = currentMenu ~= nil
     currentMenu = menu
+    local nuiItems = {}
+    for _, item in ipairs(menu.items) do
+        nuiItems[#nuiItems + 1] = {
+            id = item.id,
+            label = item.label,
+            icon = item.icon,
+            type = item.type,
+            description = item.description,
+            rightLabel = item.rightLabel,
+            disabled = item.disabled,
+            arrow = item.arrow,
+            options = item.options,
+            index = item.index,
+            min = item.min,
+            max = item.max,
+            step = item.step,
+            value = item.value,
+            checked = item.checked
+        }
+    end
     SendNUIMessage({
         action = 'menu:open',
         menu = {
@@ -94,7 +114,7 @@ local function openMenu(menu)
             subtitle = menu.subtitle,
             position = menu.position == 'left' and 'left' or 'right',
             maxVisible = menu.maxVisible or Config.MaxVisibleItems,
-            items = menu.items
+            items = nuiItems
         }
     })
     startKeyboardThread(menu)
@@ -980,7 +1000,9 @@ RegisterNUICallback('menu:select', function(data, cb)
     local item = findItem(data.id)
     if not item or not currentMenu then return end
     playSound('select')
-    if currentMenu.onSelect then
+    if item.onSelect then
+        pcall(item.onSelect, item)
+    elseif currentMenu.onSelect then
         currentMenu.onSelect(item)
     end
 end)
@@ -993,7 +1015,9 @@ RegisterNUICallback('menu:change', function(data, cb)
     if data.value ~= nil then item.value = data.value end
     if data.checked ~= nil then item.checked = data.checked end
     playSound('change')
-    if currentMenu.onChange then
+    if item.onChange then
+        pcall(item.onChange, item)
+    elseif currentMenu.onChange then
         currentMenu.onChange(item)
     end
 end)

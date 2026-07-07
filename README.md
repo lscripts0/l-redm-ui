@@ -18,8 +18,10 @@ exports['l-redm-ui']:OpenMenu({
     subtitle = 'Valentine',
     position = 'right',         -- 'left' | 'right'
     items = {
-        { id = 'buy', label = 'Buy beans', icon = 'fa-solid fa-basket-shopping', rightLabel = '$0.75', description = 'A can of beans.' },
-        { id = 'ammo', label = 'Ammo', type = 'options', options = { 'Regular', 'Express' }, index = 1 },
+        { id = 'buy', label = 'Buy beans', icon = 'fa-solid fa-basket-shopping', rightLabel = '$0.75', description = 'A can of beans.',
+            onSelect = function(item) print('bought beans') end },
+        { id = 'ammo', label = 'Ammo', type = 'options', options = { 'Regular', 'Express' }, index = 1,
+            onChange = function(item) print(item.options[item.index]) end },
         { id = 'amount', label = 'Amount', type = 'slider', min = 1, max = 10, step = 1, value = 1 },
         { id = 'wrap', label = 'Gift wrap', type = 'checkbox', checked = false },
         { id = 'more', label = 'More goods', arrow = true },
@@ -31,6 +33,8 @@ exports['l-redm-ui']:OpenMenu({
     onClose = function() end    -- escape or CloseMenu()
 })
 ```
+
+Every item can carry its own `onSelect` and `onChange`; when set they are called instead of the menu level ones, so you do not need an id switch in one big callback. The menu level `onSelect`/`onChange` still fire for items without their own.
 
 Controls: arrow keys to navigate and change values, enter to select, backspace for back. Menus do not grab input, the player can keep moving while a menu is open.
 
