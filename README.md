@@ -10,6 +10,10 @@ UI kit for RedM, styled to fit RDR2: arrow key menus, npc conversations, radial 
 
 Built in texts are localized through `locales/` (`en` and `de` ship with the resource, set via `Config.Locale`, add your own file for other languages). On start the server checks GitHub for a newer release and prints the result to the console (`Config.VersionCheck`).
 
+## Performance
+
+Measured with resmon on a Ryzen 7 5700X: 0.01 ms idle (0.00 ms with the chat disabled via `Config.Chat`), 0.03 to 0.05 ms while ui elements are on screen.
+
 ## Theming
 
 All colors live in `html/theme.css` as css variables: text, panel background, borders, selection highlight, glow, the confirm green and the cancel red. Edit the values there and restart the resource, no rebuild needed. The file explains every variable.
