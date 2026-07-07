@@ -401,7 +401,7 @@ The bar shows the label on the left and the percentage on the right, with segmen
 
 ## Chat
 
-Full replacement for the default cfx chat resource, restyled to match the kit. Remove `ensure chat` (and `ensure chat-theme-gtao`) from your server.cfg, l-redm-ui takes over.
+Full replacement for the default cfx chat resource, restyled to match the kit. Remove `ensure chat` (and `ensure chat-theme-gtao`) from your server.cfg, l-redm-ui takes over. If you would rather keep another chat resource, set `Config.Chat = false` and the whole chat part stays off.
 
 All standard chat events keep working, so txAdmin, VORP and other resources need no changes: `chat:addMessage`, `chat:addSuggestion(s)`, `chat:removeSuggestion`, `chat:addTemplate`, `chat:addMode`/`chat:removeMode`, `chat:clear`, the `chatMessage` server event, `_chat:messageEntered` and the `/say` command. The server exports `addChatMessage(target, message)`, `registerMessageHook(fn)` and `registerMode(data)` mirror the original chat exports (only `exports.chat:addMessage` callers must switch to `exports['l-redm-ui']:addChatMessage`).
 

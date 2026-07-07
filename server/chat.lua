@@ -1,3 +1,5 @@
+if not Config.Chat then return end
+
 RegisterServerEvent('chat:init')
 RegisterServerEvent('chat:addTemplate')
 RegisterServerEvent('chat:addMessage')

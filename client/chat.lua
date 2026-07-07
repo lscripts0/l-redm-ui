@@ -1,3 +1,5 @@
+if not Config.Chat then return end
+
 local chatInputActive = false
 local chatInputActivating = false
 local chatLoaded = false
