@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Slider from '@mui/material/Slider'
 import type { SxProps } from '@mui/material/styles'
 import { colors, fonts } from '../theme'
-import { fetchNui, isEnvBrowser, useNuiEvent } from '../lib/nui'
+import { fetchNui, useNuiEvent } from '../lib/nui'
 import { faClass } from '../lib/fa'
 import type { MenuData, MenuItem } from '../types'
 import Ornament from './Ornament'
@@ -12,7 +12,6 @@ import CornerOrnaments from './CornerOrnaments'
 
 interface MenuProps {
   menu: MenuData
-  onDismiss: () => void
 }
 
 const ROW_HEIGHT = 1.65
@@ -29,7 +28,7 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
 
-export default function Menu({ menu, onDismiss }: MenuProps) {
+export default function Menu({ menu }: MenuProps) {
   const [items, setItems] = useState<MenuItem[]>(() => menu.items.map((item) => ({ ...item })))
   const firstEnabled = useMemo(() => Math.max(items.findIndex((item) => !item.disabled), 0), [items])
   const maxVisible = menu.maxVisible && menu.maxVisible > 0 ? menu.maxVisible : 8
@@ -108,39 +107,6 @@ export default function Menu({ menu, onDismiss }: MenuProps) {
         activate()
         break
     }
-  })
-
-  useEffect(() => {
-    if (!isEnvBrowser()) return
-    const onKeyDown = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case 'ArrowUp':
-          event.preventDefault()
-          move(-1)
-          break
-        case 'ArrowDown':
-          event.preventDefault()
-          move(1)
-          break
-        case 'ArrowLeft':
-          event.preventDefault()
-          change(-1)
-          break
-        case 'ArrowRight':
-          event.preventDefault()
-          change(1)
-          break
-        case 'Enter':
-          if (!event.repeat) activate()
-          break
-        case 'Backspace':
-        case 'Escape':
-          if (!event.repeat) onDismiss()
-          break
-      }
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
   })
 
   const renderRight = (item: MenuItem, isSelected: boolean) => {

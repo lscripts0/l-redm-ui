@@ -3,12 +3,10 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import type { SxProps } from '@mui/material/styles'
 import { colors, fonts } from '../theme'
-import { isEnvBrowser } from '../lib/nui'
 import type { ProgressData } from '../types'
 
 interface ProgressProps {
   data: ProgressData
-  onDone: () => void
 }
 
 const positionSx: Record<string, SxProps> = {
@@ -56,7 +54,7 @@ function CancelHint({ label }: { label: string }) {
   )
 }
 
-export default function Progress({ data, onDone }: ProgressProps) {
+export default function Progress({ data }: ProgressProps) {
   const [progress, setProgress] = useState(0)
   const segments = data.segments && data.segments > 0 ? data.segments : 12
   const isCircle = data.progressType === 'circle'
@@ -70,13 +68,6 @@ export default function Progress({ data, onDone }: ProgressProps) {
     }, 40)
     return () => window.clearInterval(interval)
   }, [])
-
-  useEffect(() => {
-    if (isEnvBrowser() && progress >= 1) {
-      const timeout = setTimeout(onDone, 300)
-      return () => clearTimeout(timeout)
-    }
-  }, [progress])
 
   const percent = Math.round(progress * 100)
 

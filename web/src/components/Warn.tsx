@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { colors, fonts } from '../theme'
-import { isEnvBrowser, useNuiEvent } from '../lib/nui'
+import { useNuiEvent } from '../lib/nui'
 import type { WarnData } from '../types'
 import CornerOrnaments from './CornerOrnaments'
 import Ornament from './Ornament'
@@ -10,10 +10,9 @@ import Ornament from './Ornament'
 interface WarnProps {
   data: WarnData
   hiding: boolean
-  onDone: () => void
 }
 
-export default function Warn({ data, hiding, onDone }: WarnProps) {
+export default function Warn({ data, hiding }: WarnProps) {
   const [shown, setShown] = useState(false)
   const [progress, setProgress] = useState(0)
 
@@ -27,32 +26,6 @@ export default function Warn({ data, hiding, onDone }: WarnProps) {
   useEffect(() => {
     if (hiding) setShown(false)
   }, [hiding])
-
-  useEffect(() => {
-    if (!isEnvBrowser()) return
-    let interval: number | null = null
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Enter' || interval !== null) return
-      interval = window.setInterval(() => setProgress((value) => Math.min(value + 0.02, 1)), 100)
-    }
-    const onKeyUp = (event: KeyboardEvent) => {
-      if (event.key !== 'Enter' || interval === null) return
-      window.clearInterval(interval)
-      interval = null
-      setProgress(0)
-    }
-    window.addEventListener('keydown', onKeyDown)
-    window.addEventListener('keyup', onKeyUp)
-    return () => {
-      window.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('keyup', onKeyUp)
-      if (interval !== null) window.clearInterval(interval)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (isEnvBrowser() && progress >= 1) onDone()
-  }, [progress])
 
   return (
     <Box

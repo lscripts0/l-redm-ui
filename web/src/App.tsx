@@ -323,14 +323,14 @@ export default function App() {
     >
       <Chat />
       {menuState && (
-        <Menu key={menuState.nonce} menu={menuState.menu} onDismiss={() => setMenuState(null)} />
+        <Menu key={menuState.nonce} menu={menuState.menu} />
       )}
       {textUI && <TextUI data={textUI} hiding={textUIHiding} />}
       {holdTextUI && <HoldTextUI key={holdTextUI.nonce} data={holdTextUI.data} hiding={holdTextUIHiding} />}
       <Notify toasts={toasts} onDone={removeToast} />
       {announce && <Announce key={announce.nonce} data={announce.data} onDone={() => setAnnounce(null)} />}
-      {warn && <Warn data={warn} hiding={warnHiding} onDone={hideWarn} />}
-      {progress && <Progress key={progress.nonce} data={progress.data} onDone={() => setProgress(null)} />}
+      {warn && <Warn data={warn} hiding={warnHiding} />}
+      {progress && <Progress key={progress.nonce} data={progress.data} />}
       {dialog && <Dialog key={dialog.nonce} data={dialog.data} onDone={() => setDialog(null)} />}
       {keyConfirm && <KeyConfirm key={keyConfirm.nonce} data={keyConfirm.data} hiding={keyConfirmHiding} />}
       {minigame && <Minigame key={minigame.nonce} data={minigame.data} onDone={() => setMinigame(null)} />}

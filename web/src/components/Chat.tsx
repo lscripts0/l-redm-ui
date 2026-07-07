@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { colors, fonts } from '../theme'
-import { fetchNui, isEnvBrowser } from '../lib/nui'
+import { fetchNui } from '../lib/nui'
 
 interface ChatSuggestion {
   name: string
@@ -101,7 +101,6 @@ export default function Chat() {
     setInputOpen(false)
     setInputText('')
     historyPos.current = -1
-    if (isEnvBrowser()) return
     fetchNui('chatResult', canceled ? { canceled: true } : { message, mode: currentMode?.name })
   }
 

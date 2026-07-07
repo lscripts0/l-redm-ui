@@ -7,7 +7,7 @@ interface NuiWindow extends Window {
 
 const nuiWindow = window as NuiWindow
 
-export const isEnvBrowser = (): boolean => nuiWindow.invokeNative === undefined
+const isEnvBrowser = (): boolean => nuiWindow.invokeNative === undefined
 
 export function fetchNui<T = unknown>(event: string, data?: unknown): Promise<T | null> {
   if (isEnvBrowser()) {

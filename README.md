@@ -401,7 +401,7 @@ Full replacement for the default cfx chat resource, restyled to match the kit. R
 
 All standard chat events keep working, so txAdmin, VORP and other resources need no changes: `chat:addMessage`, `chat:addSuggestion(s)`, `chat:removeSuggestion`, `chat:addTemplate`, `chat:addMode`/`chat:removeMode`, `chat:clear`, the `chatMessage` server event, `_chat:messageEntered` and the `/say` command. The server exports `addChatMessage(target, message)`, `registerMessageHook(fn)` and `registerMode(data)` mirror the original chat exports (only `exports.chat:addMessage` callers must switch to `exports['l-redm-ui']:addChatMessage`).
 
-Usage: press T to open, enter sends, escape closes. There is no message display at all, only the input field; incoming chat messages are accepted for compatibility but not rendered. Arrow up/down cycles the input history, tab completes command suggestions, page up/down switches chat modes when a resource registered any. `/toggleChat` cycles between fade-when-idle, always show and always hide. Messages support the usual `^0`-`^9` color codes and custom HTML templates.
+Usage: press T to open, enter sends, escape closes. There is no message display at all, only the input field; incoming chat messages are accepted for compatibility but not rendered. Arrow up/down cycles the input history, tab completes command suggestions, page up/down switches chat modes when a resource registered any. Messages support the usual `^0`-`^9` color codes and custom HTML templates.
 
 ## Server side
 
