@@ -436,8 +436,6 @@ npm run build
 
 The build outputs to `html/`, which is what the resource ships.
 
-The interface uses the Zilla Slab and Graduate typefaces from Google Fonts, bundled locally. Both are licensed under the SIL Open Font License, so commercial use and redistribution are fine; the license texts live in `licenses/`.
-
 ## Support
 
 If you find this resource useful, you can support development on Ko-fi:
