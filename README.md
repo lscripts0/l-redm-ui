@@ -72,14 +72,18 @@ Like the menus, conversations do not grab input, the player keeps control.
 
 ## Radial Menu
 
-A mouse driven wheel. The cursor is grabbed while it is open; click a slice to select, right click or escape closes.
+A mouse driven wheel. The cursor is grabbed while it is open; click a slice to select. Right click, escape or a click on the center goes back one level, or closes the wheel at the top level.
 
 ```lua
 exports['l-redm-ui']:OpenRadialMenu({
     items = {
-        { id = 'greet', label = 'Greet', icon = 'handshake' },
+        { id = 'greet', label = 'Greet', icon = 'handshake',
+            onSelect = function(item) print('greeted') end },
         { id = 'rob', label = 'Rob', icon = 'sack-dollar' },
-        { id = 'horse', label = 'Horse', icon = 'horse' }
+        { id = 'horse', label = 'Horse', icon = 'horse', items = {
+            { id = 'feed', label = 'Feed', icon = 'wheat-awn' },
+            { id = 'brush', label = 'Brush', icon = 'brush' }
+        } }
     },
     onSelect = function(item) print(item.id) end,
     onClose = function() end
@@ -89,7 +93,7 @@ exports['l-redm-ui']:CloseRadialMenu()
 exports['l-redm-ui']:IsRadialMenuOpen()
 ```
 
-Icons take Font Awesome classes like the menu items.
+An item with its own `items` table opens that list as a sub wheel instead of selecting (marked with a small arrow next to the label, nest as deep as you want). Like in the menus, every item can carry its own `onSelect`; the top level `onSelect` is the fallback for items without one. Icons take Font Awesome classes like the menu items.
 
 ## Text UI
 

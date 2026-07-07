@@ -827,6 +827,27 @@ end)
 
 local currentRadial = nil
 
+local function sanitizeRadialItems(items)
+    local out = {}
+    for _, item in ipairs(items) do
+        out[#out + 1] = {
+            id = item.id,
+            label = item.label,
+            icon = item.icon,
+            hasSub = type(item.items) == 'table' and #item.items > 0
+        }
+    end
+    return out
+end
+
+local function sendRadialLevel()
+    SendNUIMessage({
+        action = 'radial:open',
+        items = sanitizeRadialItems(currentRadial.stack[#currentRadial.stack]),
+        depth = #currentRadial.stack
+    })
+end
+
 local function closeRadialMenu(fireCallback)
     if not currentRadial then return end
     local radial = currentRadial
@@ -843,11 +864,11 @@ local function openRadialMenu(data)
     if type(data) ~= 'table' or type(data.items) ~= 'table' or #data.items == 0 then return false end
     closeMenu('close')
     currentRadial = {
-        items = data.items,
+        stack = { data.items },
         onSelect = data.onSelect,
         onClose = data.onClose
     }
-    SendNUIMessage({ action = 'radial:open', items = data.items })
+    sendRadialLevel()
     SetNuiFocus(true, true)
     playSound('open')
     return true
@@ -856,26 +877,43 @@ end
 RegisterNUICallback('radial:select', function(data, cb)
     cb('ok')
     if not currentRadial then return end
-    local radial = currentRadial
-    currentRadial = nil
-    SendNUIMessage({ action = 'radial:close' })
-    SetNuiFocus(false, false)
-    playSound('select')
+    local level = currentRadial.stack[#currentRadial.stack]
     local item = nil
-    for _, entry in ipairs(radial.items) do
+    for _, entry in ipairs(level) do
         if entry.id == data.id then
             item = entry
             break
         end
     end
-    if item and radial.onSelect then
+    if not item then return end
+    if type(item.items) == 'table' and #item.items > 0 then
+        currentRadial.stack[#currentRadial.stack + 1] = item.items
+        sendRadialLevel()
+        playSound('nav')
+        return
+    end
+    local radial = currentRadial
+    currentRadial = nil
+    SendNUIMessage({ action = 'radial:close' })
+    SetNuiFocus(false, false)
+    playSound('select')
+    if item.onSelect then
+        pcall(item.onSelect, item)
+    elseif radial.onSelect then
         pcall(radial.onSelect, item)
     end
 end)
 
-RegisterNUICallback('radial:close', function(_, cb)
+RegisterNUICallback('radial:back', function(_, cb)
     cb('ok')
-    closeRadialMenu(true)
+    if not currentRadial then return end
+    if #currentRadial.stack > 1 then
+        table.remove(currentRadial.stack)
+        sendRadialLevel()
+        playSound('back')
+    else
+        closeRadialMenu(true)
+    end
 end)
 
 RegisterNUICallback('radial:nav', function(_, cb)

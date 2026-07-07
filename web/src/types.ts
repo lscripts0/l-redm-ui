@@ -138,10 +138,12 @@ export interface RadialItem {
   id: string
   label: string
   icon?: string
+  hasSub?: boolean
 }
 
 export interface RadialData {
   items: RadialItem[]
+  depth?: number
 }
 
 export interface CountdownData {

@@ -240,7 +240,7 @@ export default function App() {
   useNuiEvent('pinpad:close', () => setPinPad(null))
   useNuiEvent<RadialData>('radial:open', (data) =>
     setRadial((prev) => ({
-      data: { items: data.items },
+      data: { items: data.items, depth: data.depth },
       nonce: (prev?.nonce ?? 0) + 1
     }))
   )

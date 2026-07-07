@@ -41,8 +41,8 @@ export default function Radial({ data }: RadialProps) {
   const [hovered, setHovered] = useState<number | null>(null)
   const step = 360 / items.length
 
-  const close = () => {
-    fetchNui('radial:close', {})
+  const back = () => {
+    fetchNui('radial:back', {})
   }
 
   const select = (item: RadialItem) => {
@@ -58,7 +58,7 @@ export default function Radial({ data }: RadialProps) {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') close()
+      if (event.key === 'Escape') back()
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
@@ -77,7 +77,7 @@ export default function Radial({ data }: RadialProps) {
       }}
       onContextMenu={(event) => {
         event.preventDefault()
-        close()
+        back()
       }}
     >
       <Box sx={{ position: 'relative', width: '17rem', height: '17rem' }}>
@@ -107,6 +107,8 @@ export default function Radial({ data }: RadialProps) {
             fill="rgba(6, 6, 6, 0.82)"
             stroke="rgba(255, 255, 255, 0.15)"
             strokeWidth="0.6"
+            style={{ cursor: 'pointer' }}
+            onClick={back}
           />
         </Box>
         {items.map((item, index) => {
@@ -136,18 +138,31 @@ export default function Radial({ data }: RadialProps) {
                   sx={{ fontSize: '0.85rem', color: active ? '#0a0a0a' : colors.text }}
                 />
               )}
-              <Typography
-                sx={{
-                  fontFamily: fonts.display,
-                  fontSize: '0.5rem',
-                  textTransform: 'uppercase',
-                  textAlign: 'center',
-                  lineHeight: 1.15,
-                  color: active ? '#0a0a0a' : colors.textDim
-                }}
-              >
-                {item.label}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.14rem' }}>
+                <Typography
+                  sx={{
+                    fontFamily: fonts.display,
+                    fontSize: '0.5rem',
+                    textTransform: 'uppercase',
+                    textAlign: 'center',
+                    lineHeight: 1.15,
+                    color: active ? '#0a0a0a' : colors.textDim
+                  }}
+                >
+                  {item.label}
+                </Typography>
+                {item.hasSub && (
+                  <Box
+                    sx={{
+                      width: '0.24rem',
+                      height: '0.24rem',
+                      borderTop: `0.08rem solid ${active ? '#0a0a0a' : colors.textDim}`,
+                      borderRight: `0.08rem solid ${active ? '#0a0a0a' : colors.textDim}`,
+                      transform: 'rotate(45deg)'
+                    }}
+                  />
+                )}
+              </Box>
             </Box>
           )
         })}
@@ -158,21 +173,37 @@ export default function Radial({ data }: RadialProps) {
             top: '50%',
             transform: 'translate(-50%, -50%)',
             width: '5.6rem',
+            display: 'flex',
+            justifyContent: 'center',
             pointerEvents: 'none'
           }}
         >
-          <Typography
-            sx={{
-              fontFamily: fonts.display,
-              fontSize: '0.62rem',
-              textTransform: 'uppercase',
-              textAlign: 'center',
-              lineHeight: 1.2,
-              color: colors.text
-            }}
-          >
-            {hovered !== null ? items[hovered]?.label : ''}
-          </Typography>
+          {hovered !== null ? (
+            <Typography
+              sx={{
+                fontFamily: fonts.display,
+                fontSize: '0.62rem',
+                textTransform: 'uppercase',
+                textAlign: 'center',
+                lineHeight: 1.2,
+                color: colors.text
+              }}
+            >
+              {items[hovered]?.label}
+            </Typography>
+          ) : (
+            (data.depth ?? 1) > 1 && (
+              <Box
+                sx={{
+                  width: '0.55rem',
+                  height: '0.55rem',
+                  borderTop: `0.14rem solid ${colors.textDim}`,
+                  borderRight: `0.14rem solid ${colors.textDim}`,
+                  transform: 'rotate(-135deg) translate(15%, -15%)'
+                }}
+              />
+            )
+          )}
         </Box>
       </Box>
     </Box>
