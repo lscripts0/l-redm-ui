@@ -82,34 +82,32 @@ export default function Radial({ data }: RadialProps) {
     >
       <Box sx={{ position: 'relative', width: '17rem', height: '17rem' }}>
         <Box component="svg" viewBox={`0 0 ${SIZE} ${SIZE}`} sx={{ width: '100%', height: '100%', display: 'block' }}>
-          {items.map((item, index) => {
-            const start = index * step + GAP / 2
-            const end = (index + 1) * step - GAP / 2
-            const active = hovered === index
-            return (
-              <path
-                key={item.id}
-                d={wedgePath(start, end)}
-                fill={active ? 'rgba(242, 242, 242, 0.92)' : 'rgba(6, 6, 6, 0.82)'}
-                stroke={active ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.15)'}
-                strokeWidth="0.6"
-                style={{ cursor: 'pointer', transition: 'fill 90ms ease-out' }}
-                onMouseEnter={() => hover(index)}
-                onMouseLeave={() => hover(null)}
-                onClick={() => select(item)}
-              />
-            )
-          })}
-          <circle
-            cx={CENTER}
-            cy={CENTER}
-            r={INNER - 6}
-            fill="rgba(6, 6, 6, 0.82)"
-            stroke="rgba(255, 255, 255, 0.15)"
-            strokeWidth="0.6"
-            style={{ cursor: 'pointer' }}
-            onClick={back}
-          />
+          <g filter="url(#paint-edge-svg)">
+            {items.map((item, index) => {
+              const start = index * step + GAP / 2
+              const end = (index + 1) * step - GAP / 2
+              const active = hovered === index
+              return (
+                <path
+                  key={item.id}
+                  d={wedgePath(start, end)}
+                  fill={active ? 'rgba(242, 242, 242, 0.92)' : colors.panel}
+                  style={{ cursor: 'pointer', transition: 'fill 90ms ease-out' }}
+                  onMouseEnter={() => hover(index)}
+                  onMouseLeave={() => hover(null)}
+                  onClick={() => select(item)}
+                />
+              )
+            })}
+            <circle
+              cx={CENTER}
+              cy={CENTER}
+              r={INNER - 6}
+              fill={colors.panel}
+              style={{ cursor: 'pointer' }}
+              onClick={back}
+            />
+          </g>
         </Box>
         {items.map((item, index) => {
           const mid = index * step + step / 2

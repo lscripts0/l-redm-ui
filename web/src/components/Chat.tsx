@@ -170,17 +170,26 @@ export default function Chat() {
     >
       <Box
         sx={{
+          position: 'relative',
+          isolation: 'isolate',
           display: 'flex',
           alignItems: 'center',
           gap: '0.4rem',
           px: '0.55rem',
-          py: '0.18rem',
-          background: colors.panel,
-          border: `var(--hairline) dashed ${colors.panelEdge}`,
-          borderRadius: '0.15rem',
-          boxShadow: colors.innerGlow
+          py: '0.18rem'
         }}
       >
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: -1,
+            background: colors.panel,
+            filter: 'url(#paint-edge-0)',
+            clipPath: 'inset(-0.3rem)',
+            pointerEvents: 'none'
+          }}
+        />
         {currentMode && (
           <Typography
             sx={{
@@ -221,15 +230,24 @@ export default function Chat() {
       {matches.length > 0 && (
         <Box
           sx={{
-            mt: '0.25rem',
+            position: 'relative',
+            isolation: 'isolate',
+            mt: '0.35rem',
             px: '0.55rem',
-            py: '0.3rem',
-            background: colors.panel,
-            border: `var(--hairline) dashed ${colors.panelEdge}`,
-            borderRadius: '0.15rem',
-            boxShadow: colors.innerGlow
+            py: '0.3rem'
           }}
         >
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: -1,
+              background: colors.panel,
+              filter: 'url(#paint-edge-1)',
+              clipPath: 'inset(-0.3rem)',
+              pointerEvents: 'none'
+            }}
+          />
           {matches.map((entry) => (
             <Box key={entry.name} sx={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', minWidth: 0 }}>
               <Typography sx={{ fontFamily: fonts.body, fontSize: '0.75rem', color: colors.text, flexShrink: 0 }}>

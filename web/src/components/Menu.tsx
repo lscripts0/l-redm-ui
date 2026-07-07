@@ -8,7 +8,6 @@ import { fetchNui, useNuiEvent } from '../lib/nui'
 import { faClass } from '../lib/fa'
 import type { MenuData, MenuItem } from '../types'
 import Ornament from './Ornament'
-import CornerOrnaments from './CornerOrnaments'
 
 interface MenuProps {
   menu: MenuData
@@ -18,10 +17,7 @@ const ROW_HEIGHT = 1.65
 
 const panelSx: SxProps = {
   position: 'relative',
-  background: `linear-gradient(180deg, rgba(16, 16, 16, 0.55), rgba(0, 0, 0, 0.25)), ${colors.panel}`,
-  border: `var(--hairline) dashed ${colors.panelEdge}`,
-  borderRadius: '0.15rem',
-  boxShadow: `${colors.innerGlow}, 0 0.4rem 2.2rem rgba(0, 0, 0, 0.55)`
+  isolation: 'isolate'
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -210,7 +206,17 @@ export default function Menu({ menu }: MenuProps) {
       }}
     >
       <Box sx={panelSx}>
-        <CornerOrnaments />
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: -1,
+          background: colors.panel,
+          filter: 'url(#paint-edge-0)',
+          clipPath: 'inset(-0.35rem)',
+          pointerEvents: 'none'
+        }}
+      />
         <Box sx={{ pt: '0.65rem' }}>
           <Typography
             sx={{
@@ -276,7 +282,7 @@ export default function Menu({ menu }: MenuProps) {
                   left: 0,
                   right: 0,
                   height: `${ROW_HEIGHT}rem`,
-                  border: 'var(--hairline) solid rgba(255, 255, 255, 0.75)',
+                  border: `var(--hairline) solid ${colors.highlight}`,
                   borderRadius: '0.1rem',
                   boxShadow: colors.innerGlow,
                   backgroundColor: 'rgba(255, 255, 255, 0.04)',
@@ -360,14 +366,24 @@ export default function Menu({ menu }: MenuProps) {
           sx={{
             ...panelSx,
             position: 'absolute',
-            top: 'calc(100% + 0.4rem)',
+            top: 'calc(100% + 0.55rem)',
             left: 0,
             right: 0,
-            borderTop: 'calc(var(--hairline) * 2) solid rgba(255, 255, 255, 0.35)',
             px: '0.65rem',
             py: '0.45rem'
           } as SxProps}
         >
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: -1,
+          background: colors.panel,
+          filter: 'url(#paint-edge-1)',
+          clipPath: 'inset(-0.35rem)',
+          pointerEvents: 'none'
+        }}
+      />
           <Typography sx={{ fontSize: '0.8rem', color: colors.text, lineHeight: 1.35 }}>
             {selectedItem.description}
           </Typography>

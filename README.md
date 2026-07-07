@@ -10,6 +10,10 @@ UI kit for RedM, styled to fit RDR2: arrow key menus, npc conversations, radial 
 
 Built in texts are localized through `locales/` (`en` and `de` ship with the resource, set via `Config.Locale`, add your own file for other languages). On start the server checks GitHub for a newer release and prints the result to the console (`Config.VersionCheck`).
 
+## Theming
+
+All colors live in `html/theme.css` as css variables: text, panel background, borders, selection highlight, glow, the confirm green and the cancel red. Edit the values there and restart the resource, no rebuild needed. The file explains every variable.
+
 ## Menu
 
 ```lua
@@ -131,7 +135,7 @@ exports['l-redm-ui']:Notify('Money received', 'success', 6000)          -- durat
 exports['l-redm-ui']:Notify('Money received', 'success', 6000, 'Store') -- optional title above the message
 ```
 
-Notifications stack and slide in with an icon per type and a progress bar that runs down with the remaining display time. A sound plays when they appear and another when they fade out (both set in `config.lua`, same for the announce banner). Stack position and default duration are set in `config.lua`.
+Notifications stack and slide in on a painted panel, with an icon per type and a slim vertical bar next to the icon that drains with the remaining display time. A sound plays when they appear and another when they fade out (both set in `config.lua`, same for the announce banner). Stack position and default duration are set in `config.lua`.
 
 ## Announce
 

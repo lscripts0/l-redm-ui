@@ -31,17 +31,25 @@ export default function TextUI({ data, hiding }: TextUIProps) {
         gap: '0.5rem',
         px: '0.65rem',
         py: '0.35rem',
-        background: colors.panel,
-        border: `var(--hairline) dashed ${colors.panelEdge}`,
-        borderRadius: '0.15rem',
-        boxShadow: colors.innerGlow,
+        isolation: 'isolate',
         transform: visible ? variant.rest : variant.hidden,
         opacity: visible ? 1 : 0,
         transition: 'transform 250ms ease-out, opacity 250ms ease-out',
         ...variant.anchor
       } as SxProps}
     >
-      {data.key && (
+
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: -1,
+          background: colors.panel,
+          filter: 'url(#paint-edge-0)',
+          clipPath: 'inset(-0.3rem)',
+          pointerEvents: 'none'
+        }}
+      />      {data.key && (
         <Box
           sx={{
             width: '1.2rem',

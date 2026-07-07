@@ -33,17 +33,25 @@ export default function Objectives({ data, hiding }: ObjectivesProps) {
         maxWidth: '15rem',
         px: '0.7rem',
         py: '0.5rem',
-        background: colors.panel,
-        border: `var(--hairline) dashed ${colors.panelEdge}`,
-        borderRadius: '0.15rem',
-        boxShadow: colors.innerGlow,
+        isolation: 'isolate',
         transform: visible ? variant.rest : variant.hidden,
         opacity: visible ? 1 : 0,
         transition: 'transform 250ms ease-out, opacity 250ms ease-out',
         ...variant.anchor
       } as SxProps}
     >
-      {data.title && (
+
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: -1,
+          background: colors.panel,
+          filter: 'url(#paint-edge-0)',
+          clipPath: 'inset(-0.3rem)',
+          pointerEvents: 'none'
+        }}
+      />      {data.title && (
         <>
           <Typography
             sx={{
@@ -73,7 +81,7 @@ export default function Objectives({ data, hiding }: ObjectivesProps) {
                   height: '0.62rem',
                   flexShrink: 0,
                   transform: 'rotate(45deg)',
-                  border: `var(--hairline) solid ${done ? '#43ff36' : 'rgba(255, 255, 255, 0.55)'}`,
+                  border: `var(--hairline) solid ${done ? colors.success : 'rgba(255, 255, 255, 0.55)'}`,
                   borderRadius: '0.08rem'
                 }}
               >
@@ -82,7 +90,7 @@ export default function Objectives({ data, hiding }: ObjectivesProps) {
                     sx={{
                       position: 'absolute',
                       inset: '0.13rem',
-                      backgroundColor: '#43ff36'
+                      backgroundColor: colors.success
                     }}
                   />
                 )}
@@ -92,7 +100,8 @@ export default function Objectives({ data, hiding }: ObjectivesProps) {
                   fontFamily: fonts.body,
                   fontSize: '0.78rem',
                   lineHeight: 1.25,
-                  color: done ? 'rgba(67, 255, 54, 0.85)' : colors.text,
+                  color: done ? colors.success : colors.text,
+                  opacity: done ? 0.85 : 1,
                   textDecoration: done ? 'line-through' : 'none',
                   textDecorationThickness: 'var(--hairline)'
                 }}

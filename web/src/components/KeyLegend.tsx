@@ -31,17 +31,25 @@ export default function KeyLegend({ data, hiding }: KeyLegendProps) {
         gap: '0.3rem',
         px: '0.65rem',
         py: '0.45rem',
-        background: colors.panel,
-        border: `var(--hairline) dashed ${colors.panelEdge}`,
-        borderRadius: '0.15rem',
-        boxShadow: colors.innerGlow,
+        isolation: 'isolate',
         transform: visible ? variant.rest : variant.hidden,
         opacity: visible ? 1 : 0,
         transition: 'transform 250ms ease-out, opacity 250ms ease-out',
         ...variant.anchor
       } as SxProps}
     >
-      {data.entries.map((entry, index) => (
+
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: -1,
+          background: colors.panel,
+          filter: 'url(#paint-edge-1)',
+          clipPath: 'inset(-0.3rem)',
+          pointerEvents: 'none'
+        }}
+      />      {data.entries.map((entry, index) => (
         <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Box
             sx={{

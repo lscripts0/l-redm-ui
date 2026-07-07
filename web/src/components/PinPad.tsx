@@ -6,7 +6,6 @@ import type { SxProps } from '@mui/material/styles'
 import { colors, fonts } from '../theme'
 import { fetchNui } from '../lib/nui'
 import type { PinPadData } from '../types'
-import CornerOrnaments from './CornerOrnaments'
 import Ornament from './Ornament'
 
 interface PinPadProps {
@@ -14,7 +13,7 @@ interface PinPadProps {
   onDone: () => void
 }
 
-const buttonSx = (accent: string): SxProps => ({
+const buttonSx = (accent: string, glow: string): SxProps => ({
   flex: 1,
   fontFamily: fonts.display,
   fontWeight: 400,
@@ -29,7 +28,7 @@ const buttonSx = (accent: string): SxProps => ({
   '&:hover': {
     color: accent,
     borderColor: accent,
-    boxShadow: `inset 0 0 1.7vh ${accent}40`
+    boxShadow: `inset 0 0 1.7vh ${glow}`
   }
 })
 
@@ -141,13 +140,20 @@ export default function PinPad({ data, onDone }: PinPadProps) {
           alignItems: 'center',
           px: '1.1rem',
           py: '0.8rem',
-          background: `linear-gradient(180deg, rgba(16, 16, 16, 0.55), rgba(0, 0, 0, 0.25)), ${colors.panel}`,
-          border: `var(--hairline) dashed ${colors.panelEdge}`,
-          borderRadius: '0.15rem',
-          boxShadow: `${colors.innerGlow}, 0 0.4rem 2.2rem rgba(0, 0, 0, 0.55)`
+          isolation: 'isolate'
         }}
       >
-        <CornerOrnaments />
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: -1,
+            background: colors.panel,
+          filter: 'url(#paint-edge-1)',
+          clipPath: 'inset(-0.35rem)',
+            pointerEvents: 'none'
+          }}
+        />
         {data.title && (
           <>
             <Typography
@@ -186,7 +192,7 @@ export default function PinPad({ data, onDone }: PinPadProps) {
                     justifyContent: 'center',
                     cursor: 'pointer',
                     background: 'rgba(0, 0, 0, 0.45)',
-                    border: `var(--hairline) solid ${active ? 'rgba(255, 255, 255, 0.75)' : colors.panelEdge}`,
+                    border: `var(--hairline) solid ${active ? colors.highlight : colors.panelEdge}`,
                     borderRadius: '0.12rem',
                     boxShadow: active ? colors.innerGlow : 'none'
                   }}
@@ -210,10 +216,10 @@ export default function PinPad({ data, onDone }: PinPadProps) {
           })}
         </Box>
         <Box sx={{ display: 'flex', gap: '0.5rem', mt: '0.35rem', width: '100%' }}>
-          <ButtonBase onClick={cancel} sx={buttonSx('#ff3636')}>
+          <ButtonBase onClick={cancel} sx={buttonSx(colors.danger, colors.dangerGlow)}>
             {data.cancelLabel ?? 'Cancel'}
           </ButtonBase>
-          <ButtonBase onClick={submit} sx={buttonSx('#43ff36')}>
+          <ButtonBase onClick={submit} sx={buttonSx(colors.success, colors.successGlow)}>
             {data.submitLabel ?? 'Confirm'}
           </ButtonBase>
         </Box>

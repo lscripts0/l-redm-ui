@@ -64,18 +64,70 @@ function Toast({ toast, onDone, slide }: { toast: ToastItem; onDone: (id: number
         py: '0.35rem',
         pb: '0.45rem',
         width: '15rem',
-        overflow: 'hidden',
-        background: colors.panel,
-        border: `var(--hairline) dashed ${colors.panelEdge}`,
-        borderRadius: '0.15rem',
-        boxShadow: colors.innerGlow,
         opacity: shown ? 1 : 0,
         transform: shown ? 'none' : slide,
         transition: 'opacity 200ms ease-out, transform 200ms ease-out'
       }}
     >
-      <Icon sx={{ fontSize: '0.9rem', color: colors.text, flexShrink: 0 }} />
-      <Box sx={{ flex: 1, minWidth: 0 }}>
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          background: colors.panel,
+          filter: 'url(#paint-edge-0)',
+          clipPath: 'inset(-0.3rem)',
+          pointerEvents: 'none'
+        }}
+      />
+      <Box
+        sx={{
+          position: 'relative',
+          width: '0.16rem',
+          alignSelf: 'stretch',
+          flexShrink: 0,
+          background: 'rgba(255, 255, 255, 0.18)',
+          borderRadius: '0.08rem',
+          overflow: 'hidden'
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: shown ? '0%' : '100%',
+            background: 'rgba(255, 255, 255, 0.55)',
+            transition: `height ${duration}ms linear`
+          }}
+        />
+      </Box>
+      <Box
+        sx={{
+          position: 'relative',
+          width: '1.5rem',
+          height: '1.5rem',
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: 'var(--hairline) solid rgba(255, 255, 255, 0.4)',
+          borderRadius: '0.12rem',
+          backgroundColor: 'rgba(0, 0, 0, 0.45)'
+        }}
+      >
+        <Icon sx={{ fontSize: '0.9rem', color: colors.text }} />
+      </Box>
+      <Box
+        sx={{
+          position: 'relative',
+          width: 'var(--hairline)',
+          alignSelf: 'stretch',
+          flexShrink: 0,
+          background: 'rgba(255, 255, 255, 0.25)'
+        }}
+      />
+      <Box sx={{ position: 'relative', flex: 1, minWidth: 0 }}>
         {toast.title && (
           <>
             <Typography
@@ -103,17 +155,6 @@ function Toast({ toast, onDone, slide }: { toast: ToastItem; onDone: (id: number
           {toast.message}
         </Typography>
       </Box>
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          height: '0.1rem',
-          background: 'rgba(255, 255, 255, 0.55)',
-          width: shown ? '0%' : '100%',
-          transition: `width ${duration}ms linear`
-        }}
-      />
     </Box>
   )
 }
@@ -135,7 +176,7 @@ export default function Notify({ toasts, onDone }: NotifyProps) {
         position: 'absolute',
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.35rem',
+        gap: '0.6rem',
         ...(stackSx[position] ?? stackSx['top-left'])
       } as SxProps}
     >

@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography'
 import { colors, fonts } from '../theme'
 import { fetchNui, useNuiEvent } from '../lib/nui'
 import type { ConversationData } from '../types'
-import CornerOrnaments from './CornerOrnaments'
 import Ornament from './Ornament'
 
 interface ConversationProps {
@@ -48,13 +47,20 @@ export default function Conversation({ data }: ConversationProps) {
         width: '32rem',
         px: '1.3rem',
         py: '0.55rem',
-        background: `linear-gradient(180deg, rgba(16, 16, 16, 0.55), rgba(0, 0, 0, 0.25)), ${colors.panel}`,
-        border: `var(--hairline) dashed ${colors.panelEdge}`,
-        borderRadius: '0.15rem',
-        boxShadow: `${colors.innerGlow}, 0 0.4rem 2.2rem rgba(0, 0, 0, 0.55)`
+        isolation: 'isolate'
       }}
     >
-      <CornerOrnaments />
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: -1,
+          background: colors.panel,
+          filter: 'url(#paint-edge-0)',
+          clipPath: 'inset(-0.35rem)',
+          pointerEvents: 'none'
+        }}
+      />
       {data.name && (
         <>
           <Typography
@@ -93,7 +99,7 @@ export default function Conversation({ data }: ConversationProps) {
             left: 0,
             right: 0,
             height: `${ROW_HEIGHT}rem`,
-            border: 'var(--hairline) solid rgba(255, 255, 255, 0.75)',
+            border: `var(--hairline) solid ${colors.highlight}`,
             borderRadius: '0.1rem',
             boxShadow: colors.innerGlow,
             backgroundColor: 'rgba(255, 255, 255, 0.04)',

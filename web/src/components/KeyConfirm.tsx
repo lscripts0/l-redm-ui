@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography'
 import { colors, fonts } from '../theme'
 import { useNuiEvent } from '../lib/nui'
 import type { KeyConfirmData } from '../types'
-import CornerOrnaments from './CornerOrnaments'
 
 interface KeyConfirmProps {
   data: KeyConfirmData
@@ -92,43 +91,66 @@ export default function KeyConfirm({ data, hiding }: KeyConfirmProps) {
         transition: 'transform 250ms ease-out, opacity 250ms ease-out',
         px: '0.8rem',
         pt: '0.6rem',
-        pb: '0.7rem',
-        background: `linear-gradient(180deg, rgba(16, 16, 16, 0.55), rgba(0, 0, 0, 0.25)), ${colors.panel}`,
-        border: `var(--hairline) dashed ${colors.panelEdge}`,
-        borderRadius: '0.15rem',
-        boxShadow: `${colors.innerGlow}, 0 0.4rem 2.2rem rgba(0, 0, 0, 0.55)`,
-        overflow: 'hidden'
+        pb: '0.6rem',
+        isolation: 'isolate',
+        display: 'flex',
+        alignItems: 'stretch',
+        gap: '0.6rem'
       }}
     >
-      <CornerOrnaments />
-      <Typography
-        sx={{
-          fontFamily: fonts.body,
-          fontSize: '0.85rem',
-          color: colors.text,
-          lineHeight: 1.35,
-          textAlign: 'center',
-          mb: '0.5rem'
-        }}
-      >
-        {data.text}
-      </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.9rem' }}>
-        <KeyRow label={data.acceptLabel ?? 'E'} text={data.acceptText ?? 'Accept'} fill={fills.accept} />
-        {data.hasDecline && (
-          <KeyRow label={data.declineLabel ?? ''} text={data.declineText ?? 'Decline'} fill={fills.decline} />
-        )}
-      </Box>
       <Box
         sx={{
           position: 'absolute',
-          bottom: 0,
-          left: 0,
-          height: '0.12rem',
-          width: `${remaining * 100}%`,
-          background: 'rgba(255, 255, 255, 0.55)'
+          inset: 0,
+          zIndex: -1,
+          background: colors.panel,
+          filter: 'url(#paint-edge-1)',
+          clipPath: 'inset(-0.35rem)',
+          pointerEvents: 'none'
         }}
       />
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Typography
+          sx={{
+            fontFamily: fonts.body,
+            fontSize: '0.85rem',
+            color: colors.text,
+            lineHeight: 1.35,
+            textAlign: 'center'
+          }}
+        >
+          {data.text}
+        </Typography>
+        <Box sx={{ height: 'var(--hairline)', background: 'rgba(255, 255, 255, 0.25)', mx: '1.2rem', my: '0.4rem' }} />
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.9rem' }}>
+          <KeyRow label={data.acceptLabel ?? 'E'} text={data.acceptText ?? 'Accept'} fill={fills.accept} />
+          {data.hasDecline && (
+            <KeyRow label={data.declineLabel ?? ''} text={data.declineText ?? 'Decline'} fill={fills.decline} />
+          )}
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          position: 'relative',
+          width: '0.16rem',
+          alignSelf: 'stretch',
+          flexShrink: 0,
+          background: 'rgba(255, 255, 255, 0.18)',
+          borderRadius: '0.08rem',
+          overflow: 'hidden'
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: `${remaining * 100}%`,
+            background: 'rgba(255, 255, 255, 0.55)'
+          }}
+        />
+      </Box>
     </Box>
   )
 }

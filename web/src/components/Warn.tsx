@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography'
 import { colors, fonts } from '../theme'
 import { useNuiEvent } from '../lib/nui'
 import type { WarnData } from '../types'
-import CornerOrnaments from './CornerOrnaments'
 import Ornament from './Ornament'
 
 interface WarnProps {
@@ -43,17 +42,24 @@ export default function Warn({ data, hiding }: WarnProps) {
       <Box
         sx={{
           position: 'relative',
+          isolation: 'isolate',
           width: '24rem',
           px: '1.8rem',
           py: '1rem',
-          background: `linear-gradient(180deg, rgba(16, 16, 16, 0.55), rgba(0, 0, 0, 0.25)), ${colors.panel}`,
-          border: `var(--hairline) dashed ${colors.panelEdge}`,
-          borderRadius: '0.15rem',
-          boxShadow: `${colors.innerGlow}, 0 0.4rem 2.2rem rgba(0, 0, 0, 0.55)`,
           textAlign: 'center'
         }}
       >
-        <CornerOrnaments />
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: -1,
+          background: colors.panel,
+          filter: 'url(#paint-edge-1)',
+          clipPath: 'inset(-0.35rem)',
+          pointerEvents: 'none'
+        }}
+      />
         <Typography
           sx={{
             fontFamily: fonts.display,

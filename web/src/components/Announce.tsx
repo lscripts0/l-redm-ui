@@ -3,7 +3,6 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { colors, fonts } from '../theme'
 import type { AnnounceData } from '../types'
-import CornerOrnaments from './CornerOrnaments'
 
 interface AnnounceProps {
   data: AnnounceData
@@ -38,16 +37,22 @@ export default function Announce({ data, onDone }: AnnounceProps) {
         maxWidth: '36rem',
         px: '1.8rem',
         py: '0.4rem',
-        background: `linear-gradient(180deg, rgba(16, 16, 16, 0.55), rgba(0, 0, 0, 0.25)), ${colors.panel}`,
-        border: `var(--hairline) dashed ${colors.panelEdge}`,
-        borderRadius: '0.15rem',
-        boxShadow: `${colors.innerGlow}, 0 0.4rem 2.2rem rgba(0, 0, 0, 0.55)`,
         textAlign: 'center'
       }}
     >
-      <CornerOrnaments />
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          background: colors.panel,
+          filter: 'url(#paint-edge-1)',
+          clipPath: 'inset(-0.35rem)',
+          pointerEvents: 'none'
+        }}
+      />
       <Typography
         sx={{
+          position: 'relative',
           fontFamily: fonts.display,
           fontWeight: 400,
           fontSize: '1.05rem',
@@ -64,6 +69,7 @@ export default function Announce({ data, onDone }: AnnounceProps) {
         <>
           <Box
             sx={{
+              position: 'relative',
               height: 'var(--hairline)',
               background: 'rgba(255, 255, 255, 0.25)',
               mx: '5rem',
@@ -72,6 +78,7 @@ export default function Announce({ data, onDone }: AnnounceProps) {
           />
           <Typography
             sx={{
+              position: 'relative',
               fontSize: '0.72rem',
               fontStyle: 'italic',
               color: colors.textDim,

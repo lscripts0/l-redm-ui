@@ -37,6 +37,7 @@ import PinPad from './components/PinPad'
 import Radial from './components/Radial'
 import Countdown from './components/Countdown'
 import Objectives from './components/Objectives'
+import PaintFilters from './components/PaintFilters'
 
 interface MenuState {
   menu: MenuData
@@ -321,6 +322,7 @@ export default function App() {
         pointerEvents: 'none'
       }}
     >
+      <PaintFilters />
       <Chat />
       {menuState && (
         <Menu key={menuState.nonce} menu={menuState.menu} />

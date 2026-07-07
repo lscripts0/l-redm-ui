@@ -7,7 +7,6 @@ import type { SxProps } from '@mui/material/styles'
 import { colors, fonts } from '../theme'
 import { fetchNui } from '../lib/nui'
 import type { DialogData, FormField } from '../types'
-import CornerOrnaments from './CornerOrnaments'
 import Ornament from './Ornament'
 
 interface DialogProps {
@@ -44,7 +43,7 @@ const inputSx = {
   ...scrollbarSx
 }
 
-const buttonSx = (accent: string): SxProps => ({
+const buttonSx = (accent: string, glow: string): SxProps => ({
   flex: 1,
   fontFamily: fonts.display,
   fontWeight: 400,
@@ -59,7 +58,7 @@ const buttonSx = (accent: string): SxProps => ({
   '&:hover': {
     color: accent,
     borderColor: accent,
-    boxShadow: `inset 0 0 1.7vh ${accent}40`
+    boxShadow: `inset 0 0 1.7vh ${glow}`
   }
 })
 
@@ -333,13 +332,20 @@ export default function Dialog({ data, onDone }: DialogProps) {
           flexDirection: 'column',
           px: '1.1rem',
           py: '0.8rem',
-          background: `linear-gradient(180deg, rgba(16, 16, 16, 0.55), rgba(0, 0, 0, 0.25)), ${colors.panel}`,
-          border: `var(--hairline) dashed ${colors.panelEdge}`,
-          borderRadius: '0.15rem',
-          boxShadow: `${colors.innerGlow}, 0 0.4rem 2.2rem rgba(0, 0, 0, 0.55)`
+          isolation: 'isolate'
         }}
       >
-        <CornerOrnaments />
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: -1,
+            background: colors.panel,
+          filter: 'url(#paint-edge-1)',
+          clipPath: 'inset(-0.35rem)',
+            pointerEvents: 'none'
+          }}
+        />
         <Typography
           sx={{
             fontFamily: fonts.display,
@@ -376,10 +382,10 @@ export default function Dialog({ data, onDone }: DialogProps) {
         )}
         </Box>
         <Box sx={{ display: 'flex', gap: '0.5rem', mt: '0.6rem', flexShrink: 0 }}>
-          <ButtonBase onClick={cancel} sx={buttonSx('#ff3636')}>
+          <ButtonBase onClick={cancel} sx={buttonSx(colors.danger, colors.dangerGlow)}>
             {data.cancelLabel ?? 'Cancel'}
           </ButtonBase>
-          <ButtonBase onClick={submit} sx={buttonSx('#43ff36')}>
+          <ButtonBase onClick={submit} sx={buttonSx(colors.success, colors.successGlow)}>
             {data.submitLabel ?? 'Confirm'}
           </ButtonBase>
         </Box>

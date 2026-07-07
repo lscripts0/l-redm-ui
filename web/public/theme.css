@@ -1,0 +1,31 @@
+/*
+  l-redm-ui color theme.
+  Edit the values below to recolor the whole ui, then restart the resource.
+  Colors take any css color value (hex, rgb, rgba, hsl).
+*/
+:root {
+  /* main text */
+  --ui-text: #f2f2f2;
+  /* dimmed secondary text (subtitles, unselected entries) */
+  --ui-text-dim: rgba(242, 242, 242, 0.55);
+  /* checkbox and slider diamonds */
+  --ui-accent: #ffffff;
+  /* ornament lines and dividers */
+  --ui-line: rgba(255, 255, 255, 0.5);
+  /* panel background */
+  --ui-panel: rgba(6, 6, 6, 0.82);
+  /* borders of buttons, input fields and key badges */
+  --ui-panel-edge: rgba(255, 255, 255, 0.15);
+  /* border of the selection highlight (menus, conversations, pin pad) */
+  --ui-highlight: rgba(255, 255, 255, 0.75);
+  /* inner glow of panels and buttons */
+  --ui-glow: rgba(255, 255, 255, 0.15);
+  /* confirm button hover and finished objectives */
+  --ui-success: #43ff36;
+  /* inset glow of the confirm button on hover */
+  --ui-success-glow: rgba(67, 255, 54, 0.25);
+  /* cancel button hover */
+  --ui-danger: #ff3636;
+  /* inset glow of the cancel button on hover */
+  --ui-danger-glow: rgba(255, 54, 54, 0.25);
+}
