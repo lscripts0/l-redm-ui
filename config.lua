@@ -6,8 +6,8 @@ Config.Locale = 'en'
 -- Check GitHub for a newer release on server start and print the result to the server console.
 Config.VersionCheck = true
 
--- Replace the default cfx chat resource with the chat built into this ui.
--- Set to false if you want to run another chat resource instead.
+-- The chat built into this ui (input only, replaces the default cfx chat resource).
+-- Set to false to disable the chat in this resource entirely.
 Config.Chat = true
 
 -- Where the text ui prompt is placed on screen (default, can be overridden per call).
