@@ -439,7 +439,7 @@ The bar shows the label on the left and the percentage on the right, with segmen
 
 ## Chat
 
-An input only replacement for the default cfx chat resource: players get the command line, but chat messages are never rendered on screen, the hud stays clean. Remove `ensure chat` (and `ensure chat-theme-gtao`) from your server.cfg, l-redm-ui takes over. If you would rather keep a full chat resource with a message feed, set `Config.Chat = false` and the whole chat part stays off.
+An input only replacement for the default cfx chat resource: players get the command line, but chat messages are never rendered on screen, the hud stays clean. Remove `ensure chat` (and `ensure chat-theme-gtao`) from your server.cfg, l-redm-ui takes over. `Config.Chat = false` disables the built in chat of this resource entirely.
 
 All standard chat events are still accepted, so txAdmin, VORP and other resources need no changes; incoming messages are simply not displayed: `chat:addMessage`, `chat:addSuggestion(s)`, `chat:removeSuggestion`, `chat:addTemplate`, `chat:addMode`/`chat:removeMode`, `chat:clear`, the `chatMessage` server event, `_chat:messageEntered` and the `/say` command. The server exports `addChatMessage(target, message)`, `registerMessageHook(fn)` and `registerMode(data)` mirror the original chat exports (only `exports.chat:addMessage` callers must switch to `exports['l-redm-ui']:addChatMessage`).
 
