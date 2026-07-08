@@ -4,7 +4,7 @@ rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aw
 
 author 'lscripts'
 description 'UI kit for RedM'
-version '1.2.2'
+version '1.3.0'
 lua54 'yes'
 
 ui_page 'html/index.html'
