@@ -439,11 +439,11 @@ The bar shows the label on the left and the percentage on the right, with segmen
 
 ## Chat
 
-Full replacement for the default cfx chat resource, restyled to match the kit. Remove `ensure chat` (and `ensure chat-theme-gtao`) from your server.cfg, l-redm-ui takes over. If you would rather keep another chat resource, set `Config.Chat = false` and the whole chat part stays off.
+An input only replacement for the default cfx chat resource: players get the command line, but chat messages are never rendered on screen, the hud stays clean. Remove `ensure chat` (and `ensure chat-theme-gtao`) from your server.cfg, l-redm-ui takes over. If you would rather keep a full chat resource with a message feed, set `Config.Chat = false` and the whole chat part stays off.
 
-All standard chat events keep working, so txAdmin, VORP and other resources need no changes: `chat:addMessage`, `chat:addSuggestion(s)`, `chat:removeSuggestion`, `chat:addTemplate`, `chat:addMode`/`chat:removeMode`, `chat:clear`, the `chatMessage` server event, `_chat:messageEntered` and the `/say` command. The server exports `addChatMessage(target, message)`, `registerMessageHook(fn)` and `registerMode(data)` mirror the original chat exports (only `exports.chat:addMessage` callers must switch to `exports['l-redm-ui']:addChatMessage`).
+All standard chat events are still accepted, so txAdmin, VORP and other resources need no changes; incoming messages are simply not displayed: `chat:addMessage`, `chat:addSuggestion(s)`, `chat:removeSuggestion`, `chat:addTemplate`, `chat:addMode`/`chat:removeMode`, `chat:clear`, the `chatMessage` server event, `_chat:messageEntered` and the `/say` command. The server exports `addChatMessage(target, message)`, `registerMessageHook(fn)` and `registerMode(data)` mirror the original chat exports (only `exports.chat:addMessage` callers must switch to `exports['l-redm-ui']:addChatMessage`).
 
-Usage: press T to open, enter sends, escape closes. There is no message display at all, only the input field; incoming chat messages are accepted for compatibility but not rendered. Arrow up/down cycles the input history, tab completes command suggestions, page up/down switches chat modes when a resource registered any. Messages support the usual `^0`-`^9` color codes and custom HTML templates.
+Usage: press T to open, enter sends, escape closes. Arrow up/down cycles the input history, tab completes command suggestions, page up/down switches chat modes when a resource registered any.
 
 ## Server side
 
