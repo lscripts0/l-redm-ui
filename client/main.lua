@@ -1192,6 +1192,26 @@ RegisterNetEvent('l-redm-ui:warn', function(message, title, author)
     showWarn(message, title, author)
 end)
 
+RegisterNetEvent('l-redm-ui:countdown', function(seconds, endText)
+    startCountdown(seconds, endText)
+end)
+
+RegisterNetEvent('l-redm-ui:cancelCountdown', function()
+    cancelCountdown()
+end)
+
+RegisterNetEvent('l-redm-ui:objectives', function(data)
+    showObjectives(data)
+end)
+
+RegisterNetEvent('l-redm-ui:setObjective', function(id, done)
+    setObjective(id, done)
+end)
+
+RegisterNetEvent('l-redm-ui:hideObjectives', function()
+    hideObjectives()
+end)
+
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
     SetNuiFocus(false, false)

@@ -455,6 +455,23 @@ exports['l-redm-ui']:Announce(-1, { title = 'Valentine', subtitle = 'A quiet lit
 exports['l-redm-ui']:Warn(playerId, { message = 'You broke the rules.', author = 'Admin' })
 ```
 
+The countdown and the objectives tracker can be driven from the server too, which is handy for races and group heists where every player sees the same thing:
+
+```lua
+exports['l-redm-ui']:Countdown(-1, { seconds = 3, text = 'GO' })
+exports['l-redm-ui']:CancelCountdown(-1)
+
+exports['l-redm-ui']:ShowObjectives(playerId, {
+    title = 'Stagecoach Robbery',
+    entries = {
+        { id = 'steal', label = 'Steal the stagecoach' },
+        { id = 'lose', label = 'Lose the law' }
+    }
+})
+exports['l-redm-ui']:SetObjective(playerId, 'steal', true)
+exports['l-redm-ui']:HideObjectives(playerId)
+```
+
 The short positional forms work on the server too.
 
 ## txAdmin

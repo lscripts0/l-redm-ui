@@ -13,9 +13,39 @@ local function warn(playerId, message, title, author)
     TriggerClientEvent('l-redm-ui:warn', playerId, message, title, author)
 end
 
+local function countdown(playerId, seconds, endText)
+    if not playerId then return end
+    TriggerClientEvent('l-redm-ui:countdown', playerId, seconds, endText)
+end
+
+local function cancelCountdown(playerId)
+    if not playerId then return end
+    TriggerClientEvent('l-redm-ui:cancelCountdown', playerId)
+end
+
+local function showObjectives(playerId, data)
+    if not playerId then return end
+    TriggerClientEvent('l-redm-ui:objectives', playerId, data)
+end
+
+local function setObjective(playerId, id, done)
+    if not playerId then return end
+    TriggerClientEvent('l-redm-ui:setObjective', playerId, id, done)
+end
+
+local function hideObjectives(playerId)
+    if not playerId then return end
+    TriggerClientEvent('l-redm-ui:hideObjectives', playerId)
+end
+
 exports('Notify', notify)
 exports('Announce', announce)
 exports('Warn', warn)
+exports('Countdown', countdown)
+exports('CancelCountdown', cancelCountdown)
+exports('ShowObjectives', showObjectives)
+exports('SetObjective', setObjective)
+exports('HideObjectives', hideObjectives)
 
 if Config.TxAdmin.announcements then
     AddEventHandler('txAdmin:events:announcement', function(data)
