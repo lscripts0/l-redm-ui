@@ -125,6 +125,12 @@ local function openMenu(menu)
 end
 
 local function showTextUI(text, key, position)
+    if type(text) == 'table' then
+        local data = text
+        text = data.text
+        key = data.key
+        position = data.position
+    end
     if type(text) ~= 'string' or text == '' then return end
     textUIOpen = true
     SendNUIMessage({
@@ -142,6 +148,15 @@ local function hideTextUI()
 end
 
 local function notify(message, msgType, duration, title)
+    local position = nil
+    if type(message) == 'table' then
+        local data = message
+        message = data.message
+        msgType = data.type
+        duration = data.duration
+        title = data.title
+        position = data.position
+    end
     if type(message) ~= 'string' or message == '' then return end
     duration = duration or Config.NotifyDuration
     SendNUIMessage({
@@ -150,7 +165,7 @@ local function notify(message, msgType, duration, title)
         title = title,
         type = msgType or 'info',
         duration = duration,
-        position = Config.NotifyPosition
+        position = position or Config.NotifyPosition
     })
     playSound('notify')
     SetTimeout(math.floor(duration), function()
@@ -159,6 +174,12 @@ local function notify(message, msgType, duration, title)
 end
 
 local function announce(title, subtitle, duration)
+    if type(title) == 'table' then
+        local data = title
+        title = data.title
+        subtitle = data.subtitle
+        duration = data.duration
+    end
     if type(title) ~= 'string' or title == '' then return end
     duration = duration or Config.AnnounceDuration
     SendNUIMessage({
@@ -184,6 +205,15 @@ local function hideHoldTextUI()
 end
 
 local function showHoldTextUI(text, keyLabel, keyHash, duration, onComplete, position)
+    if type(text) == 'table' then
+        local data = text
+        text = data.text
+        keyLabel = data.key
+        keyHash = data.keyHash
+        duration = data.duration
+        onComplete = data.onComplete
+        position = data.position
+    end
     if type(text) ~= 'string' or text == '' then return end
     if type(keyHash) ~= 'number' then return end
     duration = duration or Config.HoldTextUIDuration
@@ -506,6 +536,10 @@ end)
 local keyLegendOpen = false
 
 local function showKeyLegend(entries, position)
+    if type(entries) == 'table' and entries.entries then
+        position = entries.position
+        entries = entries.entries
+    end
     if type(entries) ~= 'table' or #entries == 0 then return false end
     keyLegendOpen = true
     SendNUIMessage({
@@ -935,6 +969,11 @@ local countdownToken = 0
 local countdownActive = false
 
 local function startCountdown(seconds, endText)
+    if type(seconds) == 'table' then
+        local data = seconds
+        seconds = data.seconds
+        endText = data.text
+    end
     seconds = math.floor(tonumber(seconds) or 3)
     if seconds < 1 then seconds = 1 end
     if seconds > 3599 then seconds = 3599 end
@@ -1008,6 +1047,12 @@ end
 local warnActive = false
 
 local function showWarn(message, title, author)
+    if type(message) == 'table' then
+        local data = message
+        message = data.message
+        title = data.title
+        author = data.author
+    end
     if type(message) ~= 'string' or message == '' then return end
     closeMenu('close')
     SendNUIMessage({

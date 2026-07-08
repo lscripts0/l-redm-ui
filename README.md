@@ -107,36 +107,52 @@ An item with its own `items` table opens that list as a sub wheel instead of sel
 ## Text UI
 
 ```lua
-exports['l-redm-ui']:ShowTextUI('Open door', 'E')                 -- key badge is optional
-exports['l-redm-ui']:ShowTextUI('Open door', 'E', 'top-center')   -- position override is optional
+exports['l-redm-ui']:ShowTextUI({
+    text = 'Open door',
+    key = 'E',                 -- optional key badge
+    position = 'top-center'    -- optional, defaults to config
+})
+
 exports['l-redm-ui']:HideTextUI()
 exports['l-redm-ui']:IsTextUIOpen()
 ```
 
-The default position is set in `config.lua`. Valid positions: `top-left`, `top-center`, `top-right`, `left-center`, `right-center`, `bottom-left`, `bottom-center`, `bottom-right`.
+The short form `ShowTextUI('Open door', 'E', 'top-center')` works too. The default position is set in `config.lua`. Valid positions: `top-left`, `top-center`, `top-right`, `left-center`, `right-center`, `bottom-left`, `bottom-center`, `bottom-right`.
 
 ## Hold Text UI
 
 A prompt where the player must hold a key. You pass the label shown in the badge and the actual rdr3 control hash that gets polled; the badge fills up while holding.
 
 ```lua
-exports['l-redm-ui']:ShowHoldTextUI('Hold to open the door', 'E', 0xCEFD9220, 1500, function()
-    print('held long enough')                     -- ui hides itself before this fires
-end)
-exports['l-redm-ui']:ShowHoldTextUI('Hold', 'E', 0xCEFD9220)  -- duration falls back to config
+exports['l-redm-ui']:ShowHoldTextUI({
+    text = 'Hold to open the door',
+    key = 'E',                     -- label shown in the badge
+    keyHash = 0xCEFD9220,          -- rdr3 control hash that gets polled
+    duration = 1500,               -- optional ms, defaults to config
+    position = 'left-center',      -- optional, defaults to config
+    onComplete = function()
+        print('held long enough')  -- ui hides itself before this fires
+    end
+})
+
 exports['l-redm-ui']:HideHoldTextUI()
 exports['l-redm-ui']:IsHoldTextUIOpen()
 ```
 
-The sixth parameter overrides the position, like with `ShowTextUI`.
+The short form `ShowHoldTextUI('Hold', 'E', 0xCEFD9220, 1500, onComplete, position)` works too.
 
 ## Notify
 
 ```lua
-exports['l-redm-ui']:Notify('Money received')                           -- type defaults to 'info'
-exports['l-redm-ui']:Notify('Money received', 'success')                -- 'info' | 'success' | 'error' | 'support'
-exports['l-redm-ui']:Notify('Money received', 'success', 6000)          -- duration in ms, defaults to config
-exports['l-redm-ui']:Notify('Money received', 'success', 6000, 'Store') -- optional title above the message
+exports['l-redm-ui']:Notify({
+    message = 'Money received',
+    type = 'success',              -- 'info' | 'success' | 'error' | 'support', default 'info'
+    duration = 6000,               -- optional ms, defaults to config
+    title = 'Store',               -- optional line above the message
+    position = 'top-right'         -- optional, overrides the config position
+})
+
+exports['l-redm-ui']:Notify('Money received', 'success', 6000, 'Store')  -- short form
 ```
 
 Notifications stack and slide in on a painted panel, with an icon per type and a slim vertical bar next to the icon that drains with the remaining display time. A sound plays when they appear and another when they fade out (both set in `config.lua`, same for the announce banner). Stack position and default duration are set in `config.lua`.
@@ -144,9 +160,13 @@ Notifications stack and slide in on a painted panel, with an icon per type and a
 ## Announce
 
 ```lua
-exports['l-redm-ui']:Announce('Valentine')
-exports['l-redm-ui']:Announce('Valentine', 'A quiet little town')  -- subtitle optional
-exports['l-redm-ui']:Announce('Valentine', nil, 8000)              -- duration in ms
+exports['l-redm-ui']:Announce({
+    title = 'Valentine',
+    subtitle = 'A quiet little town',  -- optional
+    duration = 8000                    -- optional ms, defaults to config
+})
+
+exports['l-redm-ui']:Announce('Valentine', 'A quiet little town', 8000)  -- short form
 ```
 
 A big centered panel at the top edge of the screen that fades in and out, for town arrivals, job starts and similar moments.
@@ -154,8 +174,13 @@ A big centered panel at the top edge of the screen that fades in and out, for to
 ## Warn
 
 ```lua
-exports['l-redm-ui']:Warn('You broke the rules.')                      -- title defaults to 'Warning'
-exports['l-redm-ui']:Warn('You broke the rules.', 'Warning', 'Admin')  -- author is shown under the message
+exports['l-redm-ui']:Warn({
+    message = 'You broke the rules.',
+    title = 'Warning',             -- optional, defaults to the localized warning word
+    author = 'Admin'               -- optional, shown under the message
+})
+
+exports['l-redm-ui']:Warn('You broke the rules.', 'Warning', 'Admin')  -- short form
 ```
 
 A fullscreen overlay the player has to dismiss by holding enter for `Config.Warn.holdSeconds`, with a progress bar. The hold hint text is set via `Config.Warn.holdLabel`.
@@ -324,22 +349,31 @@ A grouped key hint panel: several key badges with labels in one box, for interac
 
 ```lua
 exports['l-redm-ui']:ShowKeyLegend({
-    { key = 'E', label = 'Talk' },
-    { key = 'G', label = 'Trade' },
-    { key = 'X', label = 'Leave' }
-}, 'bottom-right')       -- position optional, defaults to Config.TextUIPosition
+    entries = {
+        { key = 'E', label = 'Talk' },
+        { key = 'G', label = 'Trade' },
+        { key = 'X', label = 'Leave' }
+    },
+    position = 'bottom-right'      -- optional, defaults to Config.TextUIPosition
+})
 
 exports['l-redm-ui']:HideKeyLegend()
 exports['l-redm-ui']:IsKeyLegendOpen()
 ```
+
+The short form `ShowKeyLegend(entries, position)` works too.
 
 ## Countdown
 
 A countdown in mm:ss at the top center of the screen, for races, duels and events. It slides in, counts down, shows the end word for a moment and slides out again. Fire and forget, no callbacks and no sounds: your script decides when things start, the countdown is just the visual.
 
 ```lua
-exports['l-redm-ui']:Countdown(3)              -- seconds, capped at 59:59
-exports['l-redm-ui']:Countdown(3, 'FIGHT')     -- optional text shown at the end instead of GO
+exports['l-redm-ui']:Countdown({
+    seconds = 3,                   -- capped at 59:59
+    text = 'FIGHT'                 -- optional, shown at the end instead of GO
+})
+
+exports['l-redm-ui']:Countdown(3, 'FIGHT')     -- short form
 
 exports['l-redm-ui']:CancelCountdown()
 exports['l-redm-ui']:IsCountdownActive()
@@ -416,10 +450,12 @@ Usage: press T to open, enter sends, escape closes. There is no message display 
 Everything is triggered through exports only. On the server the exports take the player id as first parameter (`-1` targets every player):
 
 ```lua
-exports['l-redm-ui']:Notify(playerId, 'Money received', 'success', 6000, 'Store')
-exports['l-redm-ui']:Announce(-1, 'Valentine', 'A quiet little town', 8000)
-exports['l-redm-ui']:Warn(playerId, 'You broke the rules.', 'Warning', 'Admin')
+exports['l-redm-ui']:Notify(playerId, { message = 'Money received', type = 'success', title = 'Store' })
+exports['l-redm-ui']:Announce(-1, { title = 'Valentine', subtitle = 'A quiet little town' })
+exports['l-redm-ui']:Warn(playerId, { message = 'You broke the rules.', author = 'Admin' })
 ```
+
+The short positional forms work on the server too.
 
 ## txAdmin
 
