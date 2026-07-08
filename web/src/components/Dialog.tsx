@@ -100,7 +100,10 @@ export default function Dialog({ data, onDone }: DialogProps) {
     setErrors((prev) => ({ ...prev, [id]: false }))
   }
 
+  const hasCancel = data.cancelLabel !== false
+
   const cancel = () => {
+    if (!hasCancel) return
     fetchNui('dialog:result', { canceled: true })
     onDone()
   }
@@ -382,10 +385,15 @@ export default function Dialog({ data, onDone }: DialogProps) {
         )}
         </Box>
         <Box sx={{ display: 'flex', gap: '0.5rem', mt: '0.6rem', flexShrink: 0 }}>
-          <ButtonBase onClick={cancel} sx={buttonSx(colors.danger, colors.dangerGlow)}>
-            {data.cancelLabel ?? 'Cancel'}
-          </ButtonBase>
-          <ButtonBase onClick={submit} sx={buttonSx(colors.success, colors.successGlow)}>
+          {hasCancel && (
+            <ButtonBase onClick={cancel} sx={buttonSx(colors.danger, colors.dangerGlow)}>
+              {data.cancelLabel || 'Cancel'}
+            </ButtonBase>
+          )}
+          <ButtonBase
+            onClick={submit}
+            sx={buttonSx(hasCancel ? colors.success : colors.text, hasCancel ? colors.successGlow : colors.highlight)}
+          >
             {data.submitLabel ?? 'Confirm'}
           </ButtonBase>
         </Box>

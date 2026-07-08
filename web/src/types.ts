@@ -85,7 +85,7 @@ export interface DialogData {
   title: string
   message?: string
   submitLabel?: string
-  cancelLabel?: string
+  cancelLabel?: string | false
   fields?: FormField[]
 }
 

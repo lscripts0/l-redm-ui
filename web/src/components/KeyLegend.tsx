@@ -53,8 +53,9 @@ export default function KeyLegend({ data, hiding }: KeyLegendProps) {
         <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Box
             sx={{
-              width: '1.2rem',
+              minWidth: '1.2rem',
               height: '1.2rem',
+              px: '0.22rem',
               flexShrink: 0,
               display: 'flex',
               alignItems: 'center',
@@ -64,7 +65,7 @@ export default function KeyLegend({ data, hiding }: KeyLegendProps) {
               backgroundColor: 'rgba(0, 0, 0, 0.55)'
             }}
           >
-            <Typography sx={{ fontFamily: fonts.display, fontWeight: 400, fontSize: '0.7rem', color: '#ffffff' }}>
+            <Typography sx={{ fontFamily: fonts.display, fontWeight: 400, fontSize: '0.7rem', color: '#ffffff', whiteSpace: 'nowrap', lineHeight: 1 }}>
               {entry.key}
             </Typography>
           </Box>

@@ -110,14 +110,16 @@ An item with its own `items` table opens that list as a sub wheel instead of sel
 exports['l-redm-ui']:ShowTextUI({
     text = 'Open door',
     key = 'E',                 -- optional key badge
-    position = 'top-center'    -- optional, defaults to config
+    position = 'top-center',   -- optional, defaults to config
+    keyHash = 0xCEFD9220,      -- optional rdr3 control hash of the key
+    blockKey = true            -- optional, hold the key's other actions down, default false
 })
 
 exports['l-redm-ui']:HideTextUI()
 exports['l-redm-ui']:IsTextUIOpen()
 ```
 
-The short form `ShowTextUI('Open door', 'E', 'top-center')` works too. The default position is set in `config.lua`. Valid positions: `top-left`, `top-center`, `top-right`, `left-center`, `right-center`, `bottom-left`, `bottom-center`, `bottom-right`.
+The short form `ShowTextUI('Open door', 'E', 'top-center', 0xCEFD9220, true)` works too (`keyHash` and `blockKey` are the last two arguments). The default position is set in `config.lua`. Valid positions: `top-left`, `top-center`, `top-right`, `left-center`, `right-center`, `bottom-left`, `bottom-center`, `bottom-right`.
 
 ## Hold Text UI
 
@@ -130,6 +132,7 @@ exports['l-redm-ui']:ShowHoldTextUI({
     keyHash = 0xCEFD9220,          -- rdr3 control hash that gets polled
     duration = 1500,               -- optional ms, defaults to config
     position = 'left-center',      -- optional, defaults to config
+    blockKey = true,               -- optional, hold the key's other actions down, default false
     onComplete = function()
         print('held long enough')  -- ui hides itself before this fires
     end
@@ -139,7 +142,7 @@ exports['l-redm-ui']:HideHoldTextUI()
 exports['l-redm-ui']:IsHoldTextUIOpen()
 ```
 
-The short form `ShowHoldTextUI('Hold', 'E', 0xCEFD9220, 1500, onComplete, position)` works too.
+The short form `ShowHoldTextUI('Hold', 'E', 0xCEFD9220, 1500, onComplete, position, blockKey)` works too.
 
 ## Notify
 
@@ -194,7 +197,7 @@ exports['l-redm-ui']:Alert({
     title = 'Delete horse',
     message = 'Are you sure?',
     submitLabel = 'Delete',                   -- optional, default 'Confirm'
-    cancelLabel = 'Keep',                     -- optional, default 'Cancel'
+    cancelLabel = 'Keep',                     -- optional, default 'Cancel', false hides the button
     onConfirm = function() end,
     onCancel = function() end                 -- also fired on escape
 })
@@ -202,6 +205,13 @@ exports['l-redm-ui']:Alert({
 local confirmed = exports['l-redm-ui']:Alert({  -- true | false
     title = 'Delete horse',
     message = 'Are you sure?'
+})
+
+exports['l-redm-ui']:Alert({                  -- one button, escape does nothing
+    title = 'Tutorial',
+    message = 'Welcome to the training grounds.',
+    submitLabel = 'Continue',
+    cancelLabel = false
 })
 
 exports['l-redm-ui']:Input({

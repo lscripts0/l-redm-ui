@@ -124,15 +124,56 @@ local function openMenu(menu)
     return true
 end
 
-local function showTextUI(text, key, position)
+local blockTokens = {}
+
+local BlockedControls = {
+    [0xCEFD9220] = { 0x2277FAE9, 0x018C47CF, 0x91C9A817, 0x41AC83D1, 0x399C6619, 0x2EAB0795 },
+}
+
+local BlockControlTypes = { 0 }
+
+local function blockedControlsFor(keyHash, blockKey)
+    if not blockKey then return nil end
+    if type(keyHash) ~= 'number' then return nil end
+    local hashes = BlockedControls[keyHash]
+    if type(hashes) ~= 'table' or #hashes == 0 then return nil end
+    return hashes
+end
+
+local function stopBlockingControls(id)
+    blockTokens[id] = (blockTokens[id] or 0) + 1
+end
+
+local function blockControls(id, keyHash, blockKey, stillOpen)
+    stopBlockingControls(id)
+    local hashes = blockedControlsFor(keyHash, blockKey)
+    if not hashes then return end
+    local token = blockTokens[id]
+    local types = BlockControlTypes
+    CreateThread(function()
+        while token == blockTokens[id] and stillOpen() do
+            for typeIndex = 1, #types do
+                for index = 1, #hashes do
+                    DisableControlAction(types[typeIndex], hashes[index], true)
+                end
+            end
+            Wait(0)
+        end
+    end)
+end
+
+local function showTextUI(text, key, position, keyHash, blockKey)
     if type(text) == 'table' then
         local data = text
         text = data.text
         key = data.key
         position = data.position
+        keyHash = data.keyHash
+        blockKey = data.blockKey
     end
     if type(text) ~= 'string' or text == '' then return end
     textUIOpen = true
+    blockControls('textui', keyHash, blockKey, function() return textUIOpen end)
     SendNUIMessage({
         action = 'textui:show',
         text = text,
@@ -144,6 +185,7 @@ end
 local function hideTextUI()
     if not textUIOpen then return end
     textUIOpen = false
+    stopBlockingControls('textui')
     SendNUIMessage({ action = 'textui:hide' })
 end
 
@@ -201,10 +243,11 @@ local function hideHoldTextUI()
     if not holdTextUIOpen then return end
     holdTextUIOpen = false
     holdToken = holdToken + 1
+    stopBlockingControls('holdtextui')
     SendNUIMessage({ action = 'textui-hold:hide' })
 end
 
-local function showHoldTextUI(text, keyLabel, keyHash, duration, onComplete, position)
+local function showHoldTextUI(text, keyLabel, keyHash, duration, onComplete, position, blockKey)
     if type(text) == 'table' then
         local data = text
         text = data.text
@@ -213,6 +256,7 @@ local function showHoldTextUI(text, keyLabel, keyHash, duration, onComplete, pos
         duration = data.duration
         onComplete = data.onComplete
         position = data.position
+        blockKey = data.blockKey
     end
     if type(text) ~= 'string' or text == '' then return end
     if type(keyHash) ~= 'number' then return end
@@ -220,6 +264,7 @@ local function showHoldTextUI(text, keyLabel, keyHash, duration, onComplete, pos
     holdToken = holdToken + 1
     local token = holdToken
     holdTextUIOpen = true
+    blockControls('holdtextui', keyHash, blockKey, function() return holdTextUIOpen end)
     SendNUIMessage({
         action = 'textui-hold:show',
         text = text,
@@ -272,13 +317,17 @@ end
 local function openDialog(kind, data, handlers)
     if type(data) ~= 'table' or type(data.title) ~= 'string' or data.title == '' then return false end
     currentDialog = handlers
+    local cancelLabel = false
+    if data.cancelLabel ~= false then
+        cancelLabel = data.cancelLabel or L('cancel')
+    end
     SendNUIMessage({
         action = 'dialog:open',
         kind = kind,
         title = data.title,
         message = data.message,
         submitLabel = data.submitLabel or L('confirm'),
-        cancelLabel = data.cancelLabel or L('cancel'),
+        cancelLabel = cancelLabel,
         fields = data.fields
     })
     SetNuiFocus(true, true)
